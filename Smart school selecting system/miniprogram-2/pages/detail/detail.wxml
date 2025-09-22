@@ -1,0 +1,94 @@
+<view class="page">
+  <!-- 顶部渐变标题 -->
+  <view class="header">
+    <view class="header-title">推荐结果</view>
+  </view>
+
+<!-- 推荐报告 -->
+<view wx:if="{{report}}" class="results-card report-card">
+  <view class="report-header">
+    <text class="report-title">📑 推荐报告</text>
+  </view>
+  <view class="results-text">{{report}}</view>
+</view>
+
+<!-- Reach 学校 -->
+<view wx:if="{{reachSchools.length > 0}}" class="results-card">
+  <view class="results-title">🎯 Reach 学校</view>
+  <block wx:for="{{reachSchools}}" wx:key="index">
+    <view class="school-card" bindtap="toggleSchoolInfo" data-index="{{index}}" data-level="reach">
+      <view class="school-name">{{item.name}}</view>
+      <view class="school-tag Reach">{{item.level}}</view>
+      <view wx:if="{{item.showInfo}}" class="school-info">
+        <text>规模: {{item.size}}</text>
+        <text>优势专业: {{item.academics.strong_programs.join('，')}}</text>
+      </view>
+    </view>
+  </block>
+</view>
+
+<!-- Match 学校 -->
+<view wx:if="{{matchSchools.length > 0}}" class="results-card">
+  <view class="results-title">⚖️ Match 学校</view>
+  <block wx:for="{{matchSchools}}" wx:key="index">
+    <view class="school-card" bindtap="toggleSchoolInfo" data-index="{{index}}" data-level="match">
+      <view class="school-name">{{item.name}}</view>
+      <view class="school-tag Match">{{item.level}}</view>
+      <view wx:if="{{item.showInfo}}" class="school-info">
+        <text>规模: {{item.size}}</text>
+        <text>优势专业: {{item.academics.strong_programs.join('，')}}</text>
+      </view>
+    </view>
+  </block>
+</view>
+
+<!-- Safety 学校 -->
+<view wx:if="{{safetySchools.length > 0}}" class="results-card">
+  <view class="results-title">🛡️ Safety 学校</view>
+  <block wx:for="{{safetySchools}}" wx:key="index">
+    <view class="school-card" bindtap="toggleSchoolInfo" data-index="{{index}}" data-level="safety">
+      <view class="school-name">{{item.name}}</view>
+      <view class="school-tag Safety">{{item.level}}</view>
+      <view wx:if="{{item.showInfo}}" class="school-info">
+        <text>规模: {{item.size}}</text>
+        <text>优势专业: {{item.academics.strong_programs.join('，')}}</text>
+      </view>
+    </view>
+  </block>
+</view>
+
+<view class="container">
+  <view class="main-report">
+    <text>{{mainReport}}</text>
+  </view>
+
+  <block wx:for="{{recommendations}}" wx:for-item="category" wx:for-index="categoryName" wx:key="categoryName">
+    <view class="category-section">
+      <view class="category-header">
+        <text>{{categoryName.toUpperCase()}} Schools</text>
+      </view>
+      <view class="category-report">
+        <text>{{category.report}}</text>
+      </view>
+
+      <view class="school-list">
+        <view class="school-item" wx:for="{{category.schools}}" wx:for-item="school" wx:key="name">
+          <text class="school-name">{{school.name}}</text>
+          <text class="school-commentary">{{school.commentary}}</text>
+        </view>
+      </view>
+    </view>
+  </block>
+</view>
+
+<view class="footer">
+  <button class="back-btn" bindtap="goBack">返回首页</button>
+</view>
+</view>
+
+
+
+
+
+
+
