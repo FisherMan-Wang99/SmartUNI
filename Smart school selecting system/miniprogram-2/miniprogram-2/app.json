@@ -1,0 +1,12 @@
+{
+  "pages": [
+    "pages/cover/cover",
+    "pages/index/index",
+    "pages/detail/detail"
+  ],
+  "window": {
+    "navigationBarTitleText": "大学推荐系统",
+    "navigationBarBackgroundColor": "#007ACC",
+    "navigationBarTextStyle": "white"
+  }
+}
