@@ -2,7 +2,6 @@
   padding-top: 0; /* 去掉默认留白 */
 }
 
-
 /* 顶部渐变栏 */
 .header {
   background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
@@ -11,9 +10,8 @@
   color: white;
   border-bottom-left-radius: 0rpx;
   border-bottom-right-radius: 0rpx;
-  box-shadow: 0 6rpx 16rpx rgba(0,0,0,0.1);
+  box-shadow: 0 6rpx 16rpx rgba(0, 0, 0, 0.1);
 }
-
 
 .header-title {
   font-size: 40rpx;
@@ -34,7 +32,7 @@
 .card {
   background: #fff;
   border-radius: 20rpx;
-  box-shadow: 0 4rpx 12rpx rgba(0,0,0,0.05);
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.05);
   padding: 30rpx;
   margin-bottom: 30rpx;
 }
@@ -47,7 +45,8 @@
 }
 
 /* 输入框 / picker */
-.input, .picker {
+.input,
+.picker {
   width: 90%;
   padding: 20rpx;
   border: 2rpx solid #e0e0e0;
@@ -71,7 +70,7 @@
   color: white;
   font-size: 32rpx;
   font-weight: bold;
-  box-shadow: 0 6rpx 16rpx rgba(79,172,254,0.4);
+  box-shadow: 0 6rpx 16rpx rgba(79, 172, 254, 0.4);
   margin-top: 20rpx;
 }
 
@@ -92,7 +91,7 @@
   background: #fff;
   border-radius: 20rpx;
   padding: 30rpx;
-  box-shadow: 0 4rpx 12rpx rgba(0,0,0,0.05);
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.05);
 }
 
 .skeleton-title {

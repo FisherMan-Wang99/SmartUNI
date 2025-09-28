@@ -1,5 +1,6 @@
 {
   "pages": [
+    "pages/cover/cover",
     "pages/index/index",
     "pages/detail/detail"
   ],

@@ -8,39 +8,59 @@
 
 <view class="container">
 
-  <!-- 表单卡片 -->
+  <!-- 学术成绩卡片 -->
   <view class="card">
-    <view class="card-title">学术成绩</view>
+    <view class="card-title">标化成绩</view>
     <input placeholder="请输入 GPA" value="{{gpa}}" bindinput="onInputGPA" class="input"/>
     <input placeholder="请输入 SAT" value="{{sat}}" bindinput="onInputSAT" class="input"/>
     <input placeholder="请输入 TOEFL" value="{{toefl}}" bindinput="onInputTOEFL" class="input"/>
   </view>
 
+  <!-- 研究经历卡片 -->
   <view class="card">
-    <view class="card-title">研究经历</view>
+    <view class="card-title">学生背景</view>
     <picker mode="selector" range="{{backgroundOptions}}" bindchange="onBackgroundChange">
       <view class="picker">{{background || "请选择研究经历"}}</view>
     </picker>
+    <picker mode="selector" range="{{internshipOptions}}" bindchange="onInternshipChange">
+      <view class="picker">{{internship || "请选择实习经历"}}</view>
+    </picker>
+    <picker mode="selector" range="{{extracurricularOptions}}" bindchange="onExtracurricularChange">
+      <view class="picker">{{extracurricular || "请选择课外活动"}}</view>
+    </picker>
   </view>
 
+  <!-- 学校偏好卡片 -->
   <view class="card">
     <view class="card-title">学校偏好</view>
-    <picker mode="selector" range="{{preferenceOptions}}" bindchange="onPreferenceChange">
-      <view class="picker">{{preference || "请选择偏好"}}</view>
+    <picker mode="selector" range="{{locationOptions}}" bindchange="onLocationChange">
+      <view class="picker">{{location || "请选择学校位置"}}</view>
     </picker>
-  </view>
-
-  <view class="card">
-    <view class="card-title">性格特质</view>
-    <picker mode="selector" range="{{personalityOptions}}" bindchange="onPersonalityChange">
-      <view class="picker">{{personality || "请选择性格 (MBTI)"}}</view>
+    <picker mode="selector" range="{{sizeOptions}}" bindchange="onSizeChange">
+      <view class="picker">{{size || "请选择学校规模"}}</view>
     </picker>
-  </view>
-
-  <view class="card">
-    <view class="card-title">气候偏好</view>
     <picker mode="selector" range="{{climateOptions}}" bindchange="onClimateChange">
       <view class="picker">{{climate || "请选择气候"}}</view>
+    </picker>
+    <picker mode="selector" range="{{majorOptions}}" bindchange="onMajorChange">
+      <view class="picker">{{major || "请选择专业"}}</view>
+    </picker>
+    <picker mode="selector" range="{{preferenceOptions}}" bindchange="onPreferenceChange">
+      <view class="picker">{{preference || "请选择学校类型"}}</view>
+    </picker>
+    <picker mode="selector" range="{{teachingStyleOptions}}" bindchange="onTeachingStyleChange">
+      <view class="picker">{{teachingStyle || "请选择教学风格"}}</view>
+    </picker>
+  </view>
+
+  <!-- 性格特质卡片 -->
+  <view class="card">
+    <view class="card-title">性格特质</view>
+    <picker mode="selector" range="{{personalityTypeOptions}}" bindchange="onPersonalityTypeChange">
+      <view class="picker">{{personalityType || "请选择性格类别"}}</view>
+    </picker>
+    <picker mode="selector" range="{{personalityOptions}}" bindchange="onPersonalityChange">
+      <view class="picker">{{personality || "请选择性格 (MBTI)"}}</view>
     </picker>
   </view>
 
@@ -61,13 +81,4 @@
 
 </view>
 </view>
-
-
-
-
-
-
-
-
-
 

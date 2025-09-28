@@ -1,6 +1,8 @@
 // app.js
 App({
-  onLaunch() {
-    console.log("小程序启动成功");
+  globalData: {
+    // 这里只存储需要跨页面共享的数据
+    studentProfile: null,
+    recommendationResults: null
   }
-})
+});
