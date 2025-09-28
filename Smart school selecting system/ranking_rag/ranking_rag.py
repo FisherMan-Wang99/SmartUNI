@@ -96,40 +96,122 @@ def filter_by_climate(universities, student_profile):
 # called within def format_universities_for_prompt()
 def classify_schools_strict(student, universities):
     reach, match, safety = [], [], []
-
+    
+    # 获取学生成绩
     gpa = student["academics"]["gpa"]
     sat = student["academics"]["sat"]
     toefl = student["academics"]["toefl"]
-
-    #print("universities:",universities)
-
+    
+    # 计算学生综合分数（简单加权平均）
+    student_score = (gpa * 500) + (sat * 0.5) + (toefl * 2)  # 权重调整使各因素平衡
+    
+    # 对每所大学进行分类
     for uni in universities:
-        # Convert JSON string to dict if necessary
+        # 确保阈值是字典格式
         threshold = uni.get("admission_threshold", {})
         if isinstance(threshold, str):
-            threshold = json.loads(threshold)
-
-        gpa_req = threshold.get("gpa", 0)
-        sat_req = threshold.get("sat", 0)
-        toefl_req = threshold.get("toefl", 0)
-
-        # Non-overlapping strict logic:
-        if ((gpa_req - 0.3 <= gpa < gpa_req) 
-            or (toefl_req - 5 <= toefl < toefl_req) 
-            or (sat_req - 50 <= sat < sat_req)) and len(reach) <= 3:
-            reach.append(uni)
-            
-
-        elif gpa >= gpa_req and sat >= sat_req and toefl >= toefl_req:
-            # Safety only if student clearly exceeds threshold
-            if gpa > gpa_req + 0.2 and sat > sat_req + 30 and toefl > toefl_req + 5 and len(safety) <= 3:
+            try:
+                threshold = json.loads(threshold)
+            except:
+                threshold = {}
+        
+        # 获取大学要求（提供默认值）
+        gpa_req = threshold.get("gpa", 3.0)
+        sat_req = threshold.get("sat", 1000)
+        toefl_req = threshold.get("toefl", 80)
+        
+        # 计算大学综合分数
+        uni_score = (gpa_req * 500) + (sat_req * 0.5) + (toefl_req * 2)
+        
+        # 计算学生与大学的差距
+        score_gap = student_score - uni_score
+        
+        # 基于差距和录取难度进行分类
+        # 考虑学校的排名/声誉（如果有的话）
+        ranking = uni.get("ranking", {}).get("USNews", 999)  # 默认排名靠后
+        admission_rate = uni.get("admission_rate", 0.5)  # 默认录取率50%
+        
+        # 精英大学特殊处理（排名前30的大学）
+        if ranking <= 30:
+            if score_gap > 100:  # 学生成绩显著高于要求
+                if len(match) < 3:
+                    match.append(uni)
+                elif len(reach) < 3:
+                    reach.append(uni)
+            else:
+                if len(reach) < 3:
+                    reach.append(uni)
+                elif len(match) < 3 and score_gap > -50:
+                    match.append(uni)
+        
+        # 高选拔性大学（录取率低于25%）
+        elif admission_rate < 0.25:
+            if score_gap > 150:
+                if len(match) < 3:
+                    match.append(uni)
+                elif len(safety) < 3:
+                    safety.append(uni)
+            elif score_gap > 0:
+                if len(reach) < 3:
+                    reach.append(uni)
+                elif len(match) < 3:
+                    match.append(uni)
+            else:
+                if len(reach) < 3:
+                    reach.append(uni)
+        
+        # 中等选拔性大学（录取率25%-60%）
+        elif admission_rate < 0.6:
+            if score_gap > 200:
+                if len(safety) < 3:
+                    safety.append(uni)
+                elif len(match) < 3:
+                    match.append(uni)
+            elif score_gap > 50:
+                if len(match) < 3:
+                    match.append(uni)
+                elif len(safety) < 3 and score_gap > 100:
+                    safety.append(uni)
+            else:
+                if len(reach) < 3:
+                    reach.append(uni)
+                elif len(match) < 3 and score_gap > -50:
+                    match.append(uni)
+        
+        # 低选拔性大学（录取率高于60%）
+        else:
+            if score_gap > 100:
+                if len(safety) < 3:
+                    safety.append(uni)
+                elif len(match) < 3:
+                    match.append(uni)
+            elif score_gap > -50:
+                if len(match) < 3:
+                    match.append(uni)
+                elif len(safety) < 3 and score_gap > 0:
+                    safety.append(uni)
+            else:
+                if len(reach) < 3:
+                    reach.append(uni)
+    
+    # 确保每个类别至少有1所学校（如果可能）
+    if len(reach) == 0 and len(universities) > 0:
+        # 选择排名最高但学生成绩略低于要求的学校作为Reach
+        sorted_by_ranking = sorted(universities, key=lambda x: x.get("ranking", {}).get("USNews", 999))
+        for uni in sorted_by_ranking:
+            if uni not in match and uni not in safety:
+                reach.append(uni)
+                break
+    
+    if len(safety) == 0 and len(universities) > 0:
+        # 选择录取率最高且学生成绩高于要求的学校作为Safety
+        sorted_by_admission = sorted(universities, key=lambda x: x.get("admission_rate", 0), reverse=True)
+        for uni in sorted_by_admission:
+            if uni not in reach and uni not in match:
                 safety.append(uni)
-                
-            elif len(match) <= 3:
-                match.append(uni)
-                
-
-    #print("reach:",reach,"match:",match,"safety:",safety)
+                break
+    
+    # 限制每个类别最多3所学校
     return {
         "reach": reach[:3],
         "match": match[:3],
@@ -245,45 +327,69 @@ import json
 
 def generate_report(student_profile, matched_universities_text):
     prompt = f"""
-# 🎓 University Selection Report Generator
+# 角色设定
+你是一位专业的升学顾问，负责根据学生的学术背景和个人偏好，从给定的大学数据库中生成选校建议。
 
-## 🔐 Absolute Instructions & Hard Constraints
-1.  **Data Source Limitation**: You MUST ONLY use the universities provided in the **"Matched Universities Information"** section below. This is your sole source of data.
-2.  **Zero Hallucination Tolerance**: It is strictly forbidden to invent, include, or reference any university not present in the provided list. If the list has fewer than 3 schools for a category, you must explicitly state: **"Not enough universities available in the database for this category."**
-3.  **Uniqueness**: Each university can appear in **one and only one category** (Reach, Match, or Safety). No overlaps are permitted.
-4.  **Mandatory Pre-Filtering**: You must FIRST filter schools based on academic thresholds before considering fit.
+# 硬性规则
+1. **数据来源限制**：只能使用下面“匹配到的大学信息”中提供的大学数据，严禁添加或引用任何其他大学
+2. **严禁虚构**：如果某个类别大学数量不足，必须明确说明"数据库中该类别大学数量不足"
+3. **唯一性**：每所大学只能出现在一个类别中（Reach/Match/Safety）
+4. **严格遵守分类标准**：必须按照下面的学术标准进行分类
 
-## 📊 Classification Rules: A Two-Step Process
+# 分类流程（两步法）
 
-### Step 1: Academic Categorization (Non-Negotiable)
-Categorize each university by directly comparing the student's scores to the university's `admission_threshold`:
--   **Reach**: The student's GPA **OR** SAT score is **below** the university's stated threshold.
--   **Match**: The student's GPA **AND** SAT score are **at or above** the university's stated threshold.
--   **Safety**: The student's GPA **AND** SAT score are **significantly above** the university's threshold (e.g., GPA +0.3, SAT +100 points).
--   **Elite Exception**: Ultra-selective institutions (e.g., Ivy League, Stanford, MIT) are classified as **Reach** by default, unless the student's scores are exceptional (e.g., above the 90th percentile).
+## 第一步：学术门槛分类（强制性）
+根据学生成绩与大学录取门槛的对比进行分类：
 
-### Step 2: Fit-Based Prioritization (**Core Rule**)
-**Within each academic category (Reach, Match, Safety), you MUST prioritize and rank schools based on their overall fit with the student's profile.** Use the following order of priority:
-1. First consider: **Major Program Strength (Highest Weight)**: Does the university have a top program (`strong_programs`) in the student's intended major (`{student_profile['preferences']['major']}`)? This is the single most important factor.
-2. Second consider: **Culture & Personality Fit**: Does the university's culture (`culture`) and strengths (`strengths_for`) align with the student's personality (`personality`), traits (`traits`), and extracurricular background (`extracurricular`)? 
-3. Last consider: **Preference Alignment**: How well does the university match the student's stated preferences (`preferences`) for location, size, climate, and teaching style?
-**The best-fitting school in each category must be listed first.**
+**Reach（冲刺校）**：学生的GPA **或** SAT成绩低于该大学的录取门槛
+**Match（匹配校）**：学生的GPA **和** SAT成绩都达到或超过该大学的录取门槛  
+**Safety（保底校）**：学生的GPA **和** SAT成绩都显著超过该大学门槛（如GPA高0.3，SAT高100分以上）
 
----
+*特殊规则*：对于极度选拔性的大学（如常春藤盟校），默认归类为Reach，除非学生成绩异常突出
 
-## Student Profile
+## 第二步：匹配度排序（核心逻辑）
+**在每个学术类别内部，按照以下优先级对大学进行排序：**
+
+1. **专业匹配度（最高权重）**：大学在学生意向专业方面的实力
+2. **个人特质匹配**：大学文化与学生个性、特质的契合度
+3. **偏好匹配**：大学与学生地理位置、规模等偏好的匹配程度
+
+# 输入数据
+
+## 学生背景信息
 {json.dumps(student_profile, indent=2, ensure_ascii=False)}
 
-## Matched Universities Information (Database — ONLY use these schools)
+## 匹配到的大学信息（唯一数据源）
 {matched_universities_text}
 
-### 5. Personalized Recommendations  
-(Application strategy, essays, balancing list, etc.)
+# 输出要求
+**严格使用以下JSON格式输出，不要包含任何其他内容：**
 
-## Style & Output
-- Writing style: **professional, encouraging, conversational**  
-- Output format: **Markdown**  
-- ❌ IMPORTANT: If a school is not listed in the "Matched Universities Information," do NOT include it under any circumstances.
+```json
+{{
+  "reach_schools": [
+    {{
+      "name": "学校名称",
+      "level": "Reach",
+      "reasoning": "具体的推荐理由，结合学生背景与学校特点"
+    }}
+  ],
+  "match_schools": [
+    {{
+      "name": "学校名称", 
+      "level": "Match",
+      "reasoning": "具体的推荐理由"
+    }}
+  ],
+  "safety_schools": [
+    {{
+      "name": "学校名称",
+      "level": "Safety", 
+      "reasoning": "具体的推荐理由"
+    }}
+  ],
+  "analysis_summary": "简要的整体分析说明"
+}}
 """
 
     try:
