@@ -5,9 +5,8 @@
   <view class="header-title">智能选校助手</view>
   <view class="header-subtitle">AI 驱动的个性化推荐</view>
 </view>
-
+ 
 <view class="container">
-
   <!-- 学术成绩卡片 -->
   <view class="card">
     <view class="card-title">标化成绩</view>

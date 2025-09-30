@@ -1,11 +1,18 @@
 <!-- pages/detail/detail.wxml -->
+<!-- 头部标题 -->
+<view class="header">
+  <view class="title">🎓 智能选校推荐结果</view>
+  <view class="subtitle">基于您的个人背景精准匹配</view>
+</view>
+
 <view class="container">
-  <!-- 头部标题 -->
-  <view class="header">
-    <text class="title">🎓 智能选校推荐结果</text>
-    <text class="subtitle">基于您的个人背景精准匹配</text>
-  </view>
-       
+  <!-- 添加跳转按钮在页面顶部 -->
+  <view class="header-actions">
+      <button class="history-btn" bindtap="navigateToHistory">
+        <text class="btn-icon">📚</text>
+        <text class="btn-text">历史记录</text>
+      </button>
+    </view>
   <!-- 学生信息概览 -->
   <view class="student-card">
     <view class="student-header">
@@ -116,7 +123,17 @@
       </view>
     </view>
   </view>
-
+  <!-- 推荐分析报告 -->
+  <view class="report-section" wx:if="{{hasData && recommendationReason}}">
+      <view class="section-header">
+        <text class="section-title">📊 选校分析报告</text>
+        <text class="section-subtitle">基于您的个人背景和偏好生成</text>
+      </view>
+      <view class="report-content">
+        <text class="report-text">{{recommendationReason}}</text>
+      </view>
+    </view>
+    
   <!-- 调试信息（开发时可以显示，上线后隐藏） -->
   <view class="debug-info" wx:if="{{false}}"> <!-- 设置为false隐藏调试信息 -->
     <text class="debug-title">调试信息</text>
@@ -131,6 +148,12 @@
     <button class="btn-debug" bindtap="toggleDebug" wx:if="{{false}}">调试</button>
   </view>
 </view>
+
+
+
+
+
+
 
 
 

@@ -1,0 +1,46 @@
+<!-- pages/history/history.wxml -->
+<view class="history-container">
+  <!-- 页面头部 -->
+  <view class="header">
+    <text class="title">我的历史记录</text>
+    <text class="subtitle">共{{historyList.length}}条记录</text>
+  </view>
+
+  <!-- 历史记录列表 -->
+  <view class="history-list" wx:if="{{historyList.length > 0}}">
+    <view class="history-item" wx:for="{{historyList}}" wx:key="id" bindtap="onItemClick" data-item="{{item}}">
+      <!-- 记录头部：日期和状态 -->
+      <view class="item-header">
+        <text class="date">{{item.createTime}}</text>
+        <text class="status {{item.status}}">{{item.statusText}}</text>
+      </view>
+      
+      <!-- 记录主要内容 -->
+      <view class="item-content">
+        <text class="major">{{item.targetMajor}} · {{item.targetDegree}}</text>
+        <text class="schools">推荐{{item.totalSchools}}所院校</text>
+      </view>
+      
+      <!-- 记录底部：匹配度和操作 -->
+      <view class="item-footer">
+        <text class="match-rate">平均匹配度: {{item.avgMatchRate}}%</text>
+        <view class="actions">
+          <text class="action-btn view-detail">查看详情</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 空状态 -->
+  <view class="empty-state" wx:else>
+    <image src="/images/empty-history.png" class="empty-image" mode="aspectFit"></image>
+    <text class="empty-text">暂无历史记录</text>
+    <text class="empty-desc">快去生成您的第一份选校推荐吧</text>
+    <button class="primary-btn" bindtap="goToGenerate">立即开始评估</button>
+  </view>
+
+  <!-- 加载状态 -->
+  <view class="loading-state" wx:if="{{loading}}">
+    <text class="loading-text">加载中...</text>
+  </view>
+</view>

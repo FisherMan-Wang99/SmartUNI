@@ -7,8 +7,10 @@
     <view class="floating-circle circle-4"></view>
   </view>
 
-  <!-- 主要内容 -->
-  <view class="main-content">
+  <!-- 主要内容包装器 -->
+  <view class="content-wrapper">
+    <!-- 主要内容 -->
+    <view class="main-content">
     <!-- Logo 区域 -->
     <view class="logo-section">
       <view class="logo-icon">
@@ -47,5 +49,6 @@
     <view class="bottom-decoration">
       <view class="wave-line"></view>
     </view>
+  </view>
   </view>
 </view>
