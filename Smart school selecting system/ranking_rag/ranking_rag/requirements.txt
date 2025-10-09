@@ -1,6 +1,0 @@
-requests>=2.31.0
-# Optional heavy deps (uncomment if you want full vector DB + embeddings)
-# chromadb>=0.5.3
-# sentence-transformers>=2.7.0
-# torch>=2.2.0
-
