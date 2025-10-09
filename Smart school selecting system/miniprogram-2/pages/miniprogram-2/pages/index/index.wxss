@@ -1,0 +1,391 @@
+.page {
+  padding-top: 0; /* 去掉默认留白 */
+  background-color: #f0f7ff;
+}
+
+/* 顶部渐变栏 */
+.header {
+  background: linear-gradient(135deg, #1976D2 0%, #2196F3 100%);
+  padding: 80rpx 40rpx 60rpx;
+  text-align: center;
+  color: white;
+  border-bottom-left-radius: 30rpx;
+  border-bottom-right-radius: 30rpx;
+  box-shadow: 0 10rpx 30rpx rgba(33, 150, 243, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+/* 顶部装饰元素 */
+.header::after {
+  content: '';
+  position: absolute;
+  bottom: -50rpx;
+  right: -50rpx;
+  width: 300rpx;
+  height: 300rpx;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 50%;
+}
+
+.header::before {
+  content: '';
+  position: absolute;
+  top: -50rpx;
+  left: -50rpx;
+  width: 200rpx;
+  height: 200rpx;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 50%;
+}
+
+.header-title {
+  font-size: 44rpx;
+  font-weight: bold;
+  margin-bottom: 10rpx;
+  text-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.1);
+}
+
+.header-subtitle {
+  font-size: 28rpx;
+  opacity: 0.9;
+  letter-spacing: 2rpx;
+}
+
+.container {
+  padding: 30rpx;
+  padding-bottom: 100rpx;
+}
+
+/* 卡片 */
+.card {
+  background: #fff;
+  border-radius: 24rpx;
+  box-shadow: 0 6rpx 20rpx rgba(0, 0, 0, 0.05);
+  padding: 36rpx;
+  margin-bottom: 36rpx;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 6rpx;
+  background: linear-gradient(90deg, #4a148c, #7c4dff);
+  border-radius: 3rpx 3rpx 0 0;
+}
+
+.card-title {
+  font-size: 34rpx;
+  font-weight: bold;
+  margin-bottom: 30rpx;
+  color: #1976D2;
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+}
+
+.card-title::before {
+  content: '';
+  display: inline-block;
+  width: 10rpx;
+  height: 30rpx;
+  background: linear-gradient(to bottom, #1976D2, #2196F3);
+  border-radius: 5rpx;
+}
+  
+/* 输入框 / picker */
+.input,
+.picker {
+  width: 100%;
+  min-height: 92rpx; /* 修改为最小高度，允许内容扩展 */
+  padding: 20rpx 30rpx; /* 增加上下内边距 */
+  border: 2rpx solid #e0e0e0;
+  border-radius: 16rpx;
+  margin-bottom: 26rpx;
+  font-size: 28rpx;
+  color: #333;
+  background: #fafafa;
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  line-height: 1.5; /* 调整行高，适应多行文本 */
+  word-wrap: break-word; /* 允许文本换行 */
+  word-break: break-all; /* 确保长单词也能换行 */
+}
+
+.input:focus,
+.picker:active {
+  border-color: #7c4dff;
+  background: #fff;
+  box-shadow: 0 0 0 6rpx rgba(124, 77, 255, 0.1);
+}
+
+.picker {
+  color: #666;
+  position: relative;
+}
+
+.picker::after {
+  content: "▶";
+  font-size: 20rpx;
+  color: #ccc;
+  transform: rotate(90deg);
+}
+
+.picker::after {
+  content: "▶";
+  font-size: 20rpx;
+  color: #ccc;
+  transform: rotate(90deg);
+}
+
+/* 提交按钮 */
+.submit-btn {
+  width: 100%;
+  padding: 30rpx;
+  border-radius: 50rpx;
+  background: linear-gradient(135deg, #4a148c 0%, #7c4dff 100%);
+  color: white;
+  font-size: 34rpx;
+  font-weight: bold;
+  box-shadow: 0 10rpx 30rpx rgba(124, 77, 255, 0.3);
+  margin-top: 20rpx;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.submit-btn:active {
+  opacity: 0.85;
+  transform: translateY(4rpx);
+  box-shadow: 0 6rpx 20rpx rgba(124, 77, 255, 0.2);
+}
+
+.submit-btn::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(45deg, transparent, rgba(255,255,255,0.2), transparent);
+  transform: rotate(30deg);
+  opacity: 0;
+  transition: opacity 0.5s;
+}
+
+.submit-btn:active::before {
+  opacity: 1;
+}
+
+/* 空数据提示 */
+.empty {
+  text-align: center;
+  font-size: 28rpx;
+  color: #999999;
+}
+
+/* 骨架屏 */
+.skeleton-card {
+  margin-top: 40rpx;
+  background: #fff;
+  border-radius: 24rpx;
+  padding: 36rpx;
+  box-shadow: 0 6rpx 20rpx rgba(0, 0, 0, 0.05);
+}
+
+.skeleton-title {
+  width: 50%;
+  height: 36rpx;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e8e8e8 50%, #f0f0f0 75%);
+  background-size: 400% 100%;
+  border-radius: 8rpx;
+  margin-bottom: 20rpx;
+  animation: shimmer 1.5s infinite;
+}
+
+.skeleton-line {
+  width: 100%;
+  height: 28rpx;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e8e8e8 50%, #f0f0f0 75%);
+  background-size: 400% 100%;
+  border-radius: 8rpx;
+  margin-bottom: 16rpx;
+  animation: shimmer 1.5s infinite;
+}
+
+.skeleton-line.short {
+  width: 70%;
+}
+
+@keyframes shimmer {
+  0% { background-position: -400% 0; }
+  100% { background-position: 400% 0; }
+}
+
+.progress-bar {
+  width: 100%;
+  height: 20rpx;
+  background: #f2f2f2;
+  border-radius: 10rpx;
+  margin-top: 20rpx;
+  overflow: hidden;
+}
+
+.progress-fill {
+  width: 30%;
+  height: 100%;
+  background: linear-gradient(90deg, #4facfe, #00f2fe);
+  border-radius: 10rpx;
+  animation: progressMove 1.2s infinite;
+}
+
+@keyframes progressMove {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(300%); }
+}
+
+/* 输入组样式 */
+.input-group {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20rpx;
+  width: 100%;
+  flex-wrap: wrap;
+}
+
+.input-label {
+  font-size: 26rpx;
+  color: #333;
+  flex: 1;
+  padding-right: 20rpx;
+  box-sizing: border-box;
+  line-height: 1.4;
+  word-wrap: break-word;
+  word-break: break-all;
+  min-width: 0;
+}
+
+/* 活动部分样式 */
+.activity-section {
+  margin-bottom: 36rpx;
+  padding-bottom: 24rpx;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.activity-section:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.activity-title {
+  font-size: 28rpx;
+  font-weight: bold;
+  color: #1976D2;
+  margin-bottom: 16rpx;
+  padding-left: 10rpx;
+}
+
+/* 活动类型选择器样式 */
+.activity-picker {
+  margin-bottom: 20rpx;
+}
+
+/* 短输入框样式 */
+.input.short {
+  flex: 0 0 auto;
+  width: 160rpx;
+  text-align: center;
+}
+
+/* 长输入框样式 */
+.input.full {
+  width: 100%;
+}
+
+/* Slider滑块样式增强 */
+.slider {
+  margin: 10rpx 0 20rpx 0;
+  width: 100%;
+}
+
+/* 自定义滑块样式 */
+slider {
+  margin: 10rpx 0 20rpx 0;
+  width: 100%;
+}
+
+/* 滑块轨道样式 */
+slider .wx-slider-track {
+  height: 12rpx;
+  background: linear-gradient(90deg, #4facfe, #00f2fe);
+  border-radius: 6rpx;
+  box-shadow: 0 2rpx 8rpx rgba(79, 172, 254, 0.3);
+}
+
+/* 滑块背景样式 */
+slider .wx-slider-bg {
+  height: 12rpx;
+  background: #e0e0e0;
+  border-radius: 6rpx;
+}
+
+/* 滑块按钮样式 */
+slider .wx-slider-thumb {
+  width: 40rpx;
+  height: 40rpx;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 4rpx solid #4facfe;
+  box-shadow: 0 4rpx 16rpx rgba(79, 172, 254, 0.4);
+  transition: all 0.3s ease;
+}
+
+/* 滑块按钮激活状态 */
+slider .wx-slider-thumb:active {
+  transform: scale(1.2);
+  box-shadow: 0 6rpx 20rpx rgba(79, 172, 254, 0.5);
+}
+
+/* 滑块数值显示样式 */
+slider .wx-slider-value {
+  font-size: 26rpx;
+  color: #1976D2;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1rpx solid #e0e0e0;
+  border-radius: 6rpx;
+  padding: 2rpx 10rpx;
+  margin-top: 8rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.05);
+}
+
+/* 修复iOS设备上的输入框样式问题 */
+.input[type="digit"] {
+  -webkit-appearance: none;
+  border-radius: 16rpx;
+}
+
+/* 适配不同屏幕尺寸 */
+@media screen and (min-width: 768rpx) {
+  .container {
+    padding: 40rpx;
+  }
+  
+  .card {
+    padding: 48rpx;
+  }
+  
+  .input-label {
+    font-size: 28rpx;
+  }
+}
+

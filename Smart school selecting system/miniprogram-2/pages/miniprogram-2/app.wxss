@@ -1,0 +1,15 @@
+/* app.wxss */
+/* 全局样式 - 亮蓝色科技感主题 */
+page {
+  --primary-color: #2196F3; /* 主蓝色 */
+  --secondary-color: #03A9F4; /* 亮蓝色 */
+  --tertiary-color: #00BCD4; /* 青色 */
+  --background-color: #f0f7ff; /* 浅蓝色背景 */
+  --card-color: #ffffff;
+  --text-primary: #263238;
+  --text-secondary: #607D8B;
+  
+  background: var(--background-color);
+  font-family: sans-serif;
+}
+

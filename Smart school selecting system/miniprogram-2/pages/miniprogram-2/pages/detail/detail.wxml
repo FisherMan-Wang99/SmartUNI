@@ -1,0 +1,162 @@
+<!-- pages/detail/detail.wxml -->
+<!-- 头部标题 -->
+<view class="header">
+  <view class="title">🎓 智能选校推荐结果</view>
+  <view class="subtitle">基于您的个人背景精准匹配</view>
+</view>
+
+<view class="container">
+  <!-- 添加跳转按钮在页面顶部 -->
+  <view class="header-actions">
+      <button class="history-btn" bindtap="navigateToHistory">
+        <text class="btn-icon">📚</text>
+        <text class="btn-text">历史记录</text>
+      </button>
+    </view>
+  <!-- 学生信息概览 -->
+  <view class="student-card">
+    <view class="student-header">
+      <text class="student-name">{{studentInfo.name}} • {{studentInfo.intendedMajor}}</text>
+    </view>
+    <view class="student-stats">
+      <view class="stat-item">
+        <text class="stat-label">GPA</text>
+        <text class="stat-value">{{studentInfo.gpa}}</text>
+      </view>
+      <view class="stat-item">
+        <text class="stat-label">{{studentInfo.testScoreLabel}}</text>
+        <text class="stat-value">{{studentInfo.testScore}}</text>
+      </view>
+      <view class="stat-item">
+        <text class="stat-label">{{studentInfo.englishScoreLabel}}</text>
+        <text class="stat-value">{{studentInfo.englishScore || '未填写'}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 推荐学校分类 -->
+  <view class="categories">
+    <!-- 冲刺学校 -->
+    <view class="category-section reach">
+      <view class="category-header">
+        <text class="category-icon">🚀</text>
+        <text class="category-title">冲刺学校 (Reach)</text>
+        <text class="category-subtitle">录取概率: 20-40%</text>
+      </view>
+      <view class="schools-list">
+        <block wx:for="{{recommendations.reach_schools}}" wx:key="name">
+          <view class="school-card">
+            <view class="school-header">
+              <text class="school-name">{{item.name}}</text>
+              <text class="school-badge">#{{index + 1}}</text>
+            </view>
+            <view class="school-reasoning">
+              <text class="reasoning-text">{{item.reasoning}}</text>
+            </view>
+            <view class="school-footer">
+              <text class="level-tag reach-tag">{{item.level}}</text>
+              <text wx:if="{{item.admission_probability}}" class="probability-tag">{{item.admission_probability}}录取概率</text>
+            </view>
+          </view>
+        </block>
+        <view wx:if="{{recommendations.reach_schools.length === 0}}" class="empty-state">
+          <text>暂无冲刺学校推荐</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 匹配学校 -->
+    <view class="category-section match">
+      <view class="category-header">
+        <text class="category-icon">⭐</text>
+        <text class="category-title">匹配学校 (Match)</text>
+        <text class="category-subtitle">录取概率: 40-70%</text>
+      </view>
+      <view class="schools-list">
+        <block wx:for="{{recommendations.match_schools}}" wx:key="name">
+          <view class="school-card">
+            <view class="school-header">
+              <text class="school-name">{{item.name}}</text>
+              <text class="school-badge">#{{index + 1}}</text>
+            </view>
+            <view class="school-reasoning">
+              <text class="reasoning-text">{{item.reasoning}}</text>
+            </view>
+            <view class="school-footer">
+              <text class="level-tag match-tag">{{item.level}}</text>
+              <text wx:if="{{item.admission_probability}}" class="probability-tag">{{item.admission_probability}}录取概率</text>
+            </view>
+          </view>
+        </block>
+        <view wx:if="{{recommendations.match_schools.length === 0}}" class="empty-state">
+          <text>暂无匹配学校推荐</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 保底学校 -->
+    <view class="category-section safety">
+      <view class="category-header">
+        <text class="category-icon">🛡️</text>
+        <text class="category-title">保底学校 (Safety)</text>
+        <text class="category-subtitle">录取概率: 70%+</text>
+      </view>
+      <view class="schools-list">
+        <block wx:for="{{recommendations.safety_schools}}" wx:key="name">
+          <view class="school-card">
+            <view class="school-header">
+              <text class="school-name">{{item.name}}</text>
+              <text class="school-badge">#{{index + 1}}</text>
+            </view>
+            <view class="school-reasoning">
+              <text class="reasoning-text">{{item.reasoning}}</text>
+            </view>
+            <view class="school-footer">
+              <text class="level-tag safety-tag">{{item.level}}</text>
+              <text wx:if="{{item.admission_probability}}" class="probability-tag">{{item.admission_probability}}录取概率</text>
+            </view>
+          </view>
+        </block>
+        <view wx:if="{{recommendations.safety_schools.length === 0}}" class="empty-state">
+          <text>暂无保底学校推荐</text>
+        </view>
+      </view>
+    </view>
+  </view>
+  <!-- 推荐分析报告 -->
+  <view class="report-section" wx:if="{{hasData && recommendationReason}}">
+      <view class="section-header">
+        <text class="section-title">📊 选校分析报告</text>
+        <text class="section-subtitle">基于您的个人背景和偏好生成</text>
+      </view>
+      <view class="report-content">
+        <text class="report-text">{{recommendationReason}}</text>
+      </view>
+    </view>
+    
+  <!-- 调试信息（开发时可以显示，上线后隐藏） -->
+  <view class="debug-info" wx:if="{{false}}"> <!-- 设置为false隐藏调试信息 -->
+    <text class="debug-title">调试信息</text>
+    <text>学生信息: {{JSON.stringify(studentInfo)}}</text>
+    <text>推荐结果: {{JSON.stringify(recommendations)}}</text>
+  </view>
+
+  <!-- 操作按钮 -->
+  <view class="action-buttons">
+    <button class="btn-primary" bindtap="saveRecommendation">保存推荐</button>
+    <button class="btn-secondary" bindtap="shareRecommendation">分享结果</button>
+    <button class="btn-debug" bindtap="toggleDebug" wx:if="{{false}}">调试</button>
+  </view>
+</view>
+
+
+
+
+
+
+
+
+
+
+
+
