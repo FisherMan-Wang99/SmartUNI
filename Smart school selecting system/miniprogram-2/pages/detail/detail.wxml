@@ -24,12 +24,12 @@
         <text class="stat-value">{{studentInfo.gpa}}</text>
       </view>
       <view class="stat-item">
-        <text class="stat-label">SAT</text>
-        <text class="stat-value">{{studentInfo.sat}}</text>
+        <text class="stat-label">{{studentInfo.testScoreLabel}}</text>
+        <text class="stat-value">{{studentInfo.testScore}}</text>
       </view>
       <view class="stat-item">
-        <text class="stat-label">TOEFL</text>
-        <text class="stat-value">{{studentInfo.toefl || '未填写'}}</text>
+        <text class="stat-label">{{studentInfo.englishScoreLabel}}</text>
+        <text class="stat-value">{{studentInfo.englishScore || '未填写'}}</text>
       </view>
     </view>
   </view>

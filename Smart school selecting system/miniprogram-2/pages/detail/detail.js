@@ -21,11 +21,15 @@ Page({
 
   onLoad: function(options) {
     console.log('详情页面加载，参数:', options);
+    this.fromHistory = options.fromHistory === 'true';
     this.getStudentInfo();
   },
 
   onShow: function() {
-    this.getStudentInfo();
+    // 如果是从历史记录页面过来的，不再重新获取数据
+    if (!this.fromHistory) {
+      this.getStudentInfo();
+    }
   },
 
   // 安全地获取学生信息
@@ -47,11 +51,30 @@ Page({
       console.log('推荐结果:', results);
 
       if (studentProfile) {
+        // 确定要显示的考试成绩类型（SAT/ACT）
+        const testScoreType = studentProfile.academics?.act ? 'act' : 'sat';
+        const testScoreLabel = testScoreType.toUpperCase();
+        const testScore = studentProfile.academics?.[testScoreType] || '未填写';
+        
+        // 确定要显示的英语考试类型
+        let englishScoreLabel = '托福';
+        let englishScore = studentProfile.academics?.toefl || '未填写';
+        
+        if (studentProfile.academics?.ielts) {
+          englishScoreLabel = '雅思';
+          englishScore = studentProfile.academics.ielts;
+        } else if (studentProfile.academics?.det) {
+          englishScoreLabel = '多邻国';
+          englishScore = studentProfile.academics.det;
+        }
+        
         const studentInfo = {
           name: '学生',
           gpa: studentProfile.academics?.gpa || '未填写',
-          sat: studentProfile.academics?.sat || '未填写',
-          toefl: studentProfile.academics?.toefl || '未填写',
+          testScore: testScore,
+          testScoreLabel: testScoreLabel,
+          englishScore: englishScore,
+          englishScoreLabel: englishScoreLabel,
           intendedMajor: studentProfile.preferences?.major || '未选择专业'
         };
 
@@ -112,17 +135,36 @@ Page({
       this.setDefaultStudentInfo();
     }
   },
-
+      
   // 生成默认推荐原因（当后端没有返回report时使用）
   generateDefaultReason: function(studentProfile, results) {
     const major = studentProfile.preferences?.major || '所选专业';
     const gpa = studentProfile.academics?.gpa || '';
-    const sat = studentProfile.academics?.sat || '';
+    
+    // 确定要显示的考试成绩
+    const testScoreType = studentProfile.academics?.act ? 'ACT' : 'SAT';
+    const testScore = studentProfile.academics?.act || studentProfile.academics?.sat || '';
+    
+    // 确定要显示的英语考试成绩
+    let englishScoreLabel = '托福';
+    let englishScore = studentProfile.academics?.toefl || '';
+    
+    if (studentProfile.academics?.ielts) {
+      englishScoreLabel = '雅思';
+      englishScore = studentProfile.academics.ielts;
+    } else if (studentProfile.academics?.det) {
+      englishScoreLabel = '多邻国';
+      englishScore = studentProfile.academics.det;
+    }
     
     let reason = `基于您的学术背景`;
     
-    if (gpa || sat) {
-      reason += `（${gpa ? 'GPA: ' + gpa : ''}${gpa && sat ? '，' : ''}${sat ? 'SAT: ' + sat : ''}）`;
+    if (gpa || testScore || englishScore) {
+      let scoreInfo = [];
+      if (gpa) scoreInfo.push(`GPA: ${gpa}`);
+      if (testScore) scoreInfo.push(`${testScoreType}: ${testScore}`);
+      if (englishScore) scoreInfo.push(`${englishScoreLabel}: ${englishScore}`);
+      reason += `（${scoreInfo.join('，')}）`;
     }
     
     reason += `和${major}专业意向，我们的智能推荐系统为您筛选了最合适的院校：\n\n`;
@@ -152,8 +194,10 @@ Page({
       studentInfo: {
         name: '请先填写信息',
         gpa: '暂无',
-        sat: '暂无',
-        toefl: '暂无',
+        testScore: '暂无',
+        testScoreLabel: 'SAT',
+        englishScore: '暂无',
+        englishScoreLabel: '托福',
         intendedMajor: '暂无'
       },
       recommendations: {
@@ -165,7 +209,7 @@ Page({
     });
   },
 
-  // 保存推荐结果（包含report）
+  // 保存推荐结果到历史记录
   saveRecommendation: function() {
     wx.showModal({
       title: '保存推荐',
@@ -173,12 +217,43 @@ Page({
       success: (res) => {
         if (res.confirm) {
           try {
-            wx.setStorageSync('lastRecommendation', {
-              studentInfo: this.data.studentInfo,
-              recommendations: this.data.recommendations,
-              recommendationReason: this.data.recommendationReason,
-              timestamp: new Date().getTime()
-            });
+            // 获取现有的历史记录
+            const historyList = wx.getStorageSync('recommendationHistory') || [];
+            
+            // 创建新的历史记录项
+            const newRecord = {
+              id: Date.now(), // 使用时间戳作为唯一ID
+              createTime: this.formatDateTime(new Date()),
+              status: 'success',
+              statusText: '已完成',
+              targetMajor: this.data.studentInfo.intendedMajor,
+              targetDegree: '硕士', // 假设为硕士，可根据实际情况修改
+              totalSchools: (
+                (this.data.recommendations.reach_schools?.length || 0) +
+                (this.data.recommendations.match_schools?.length || 0) +
+                (this.data.recommendations.safety_schools?.length || 0)
+              ),
+              avgMatchRate: 80, // 默认值，可根据实际情况计算
+              // 保存完整的数据以便后续查看
+              fullData: {
+                studentInfo: this.data.studentInfo,
+                recommendations: this.data.recommendations,
+                recommendationReason: this.data.recommendationReason,
+                timestamp: new Date().getTime(),
+                studentProfile: getApp().globalData.studentProfile,
+                recommendationResults: getApp().globalData.recommendationResults
+              }
+            };
+            
+            // 添加到历史记录列表开头
+            historyList.unshift(newRecord);
+            
+            // 保存到本地存储
+            wx.setStorageSync('recommendationHistory', historyList);
+            
+            // 同时保存为最后一次推荐（保持向后兼容）
+            wx.setStorageSync('lastRecommendation', newRecord.fullData);
+            
             wx.showToast({
               title: '保存成功',
               icon: 'success'
@@ -193,6 +268,16 @@ Page({
         }
       }
     });
+  },
+  
+  // 格式化日期时间
+  formatDateTime: function(date) {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    return `${year}-${month}-${day} ${hours}:${minutes}`;
   },
 
   // 跳转到历史记录页面

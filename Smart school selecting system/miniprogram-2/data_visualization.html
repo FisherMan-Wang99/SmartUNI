@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>前端数据提交到后端可视化</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            padding: 20px;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #1a73e8;
+            margin-bottom: 30px;
+            font-size: 24px;
+        }
+        
+        .section {
+            margin-bottom: 30px;
+        }
+        
+        h2 {
+            color: #1a73e8;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e0e0e0;
+            font-size: 20px;
+        }
+        
+        .flow-diagram {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        
+        .flow-item {
+            padding: 20px;
+            margin: 10px 0;
+            border-radius: 8px;
+            text-align: center;
+            width: 100%;
+            position: relative;
+        }
+        
+        .flow-item.frontend {
+            background-color: #e8f0fe;
+            border: 2px solid #1a73e8;
+        }
+        
+        .flow-item.arrow {
+            padding: 5px;
+            font-size: 24px;
+            color: #666;
+        }
+        
+        .flow-item.backend {
+            background-color: #e6f7e6;
+            border: 2px solid #34a853;
+        }
+        
+        .data-structure {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            margin: 20px 0;
+            overflow-x: auto;
+        }
+        
+        pre {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        
+        .data-example {
+            background-color: #fff8e1;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #ffcc00;
+            margin: 20px 0;
+        }
+        
+        .note {
+            background-color: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #856404;
+        }
+        
+        .highlight {
+            color: #e53935;
+            font-weight: bold;
+        }
+        
+        .field-info {
+            margin-bottom: 10px;
+            padding-left: 20px;
+        }
+        
+        .field-name {
+            font-weight: bold;
+            color: #1a73e8;
+        }
+        
+        .field-desc {
+            color: #666;
+            font-size: 14px;
+            margin-left: 10px;
+        }
+        
+        .update-note {
+            background-color: #e3f2fd;
+            border: 1px solid #90caf9;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
+            font-size: 14px;
+            color: #0d47a1;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>前端数据提交到后端可视化</h1>
+        
+        <div class="update-note">
+            <strong>更新说明:</strong> 此页面已更新为最新的数据结构，反映了活动经历和学校偏好的新设计。
+        </div>
+        
+        <div class="section">
+            <h2>1. 数据提交流程</h2>
+            <div class="flow-diagram">
+                <div class="flow-item frontend">
+                    <strong>前端表单</strong><br>
+                    学生填写标化成绩、活动经历、学校偏好等信息
+                </div>
+                <div class="flow-item arrow">↓</div>
+                <div class="flow-item frontend">
+                    <strong>数据收集与验证</strong><br>
+                    onSubmit函数收集表单数据并进行验证
+                </div>
+                <div class="flow-item arrow">↓</div>
+                <div class="flow-item frontend">
+                    <strong>数据结构组织</strong><br>
+                    将数据组织成特定的JSON格式，包含学术成绩、活动经历和学校偏好
+                </div>
+                <div class="flow-item arrow">↓</div>
+                <div class="flow-item backend">
+                    <strong>后端接收处理</strong><br>
+                    发送到http://192.168.3.99:8000/recommend
+                </div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2>2. 数据发送结构</h2>
+            <div class="data-structure">
+                <pre>{
+  "academics": {
+    "gpa": "GPA成绩",
+    "sat": "SAT成绩",
+    "act": "ACT成绩",
+    "toefl": "托福成绩",
+    "ielts": "雅思成绩",
+    "det": "多邻国成绩"
+  },
+  "activities": {
+    "research_months": 研究经历时长(月),
+    "research_type": "科研类型",
+    "volunteer_months": 志愿者活动时长(月),
+    "volunteer_type": "志愿者活动类型",
+    "internship_months": 兼职实习时长(月),
+    "internship_type": "兼职实习类型",
+    "art_months": 艺术实践时长(月),
+    "art_type": "艺术实践类型",
+    "full_time_work_months": 全职工作时长(月),
+    "full_time_work_type": "全职工作类型",
+    "honors": "校级及以上荣誉"
+  },
+  "preferences": {
+    "career_interest": "职业兴趣",
+    "location": "学校位置",
+    "size": "学校规模",
+    "tuition": 学费金额,
+    "major": "专业",
+    "teacher_student_ratio": "师生关系偏好",
+    "school_atmosphere": "学校氛围偏好",
+    "international_level": "国际化程度偏好"
+  }
+}</pre>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2>3. 数据填充逻辑</h2>
+            <div class="field-info">
+                <span class="field-name">考试类型与成绩:</span>
+                <span class="field-desc">根据选择的考试类型(SAT/ACT)，将成绩填入对应字段</span>
+            </div>
+            <div class="field-info">
+                <span class="field-name">英语考试类型与成绩:</span>
+                <span class="field-desc">根据选择的英语考试类型(托福/雅思/多邻国)，将成绩填入对应字段</span>
+            </div>
+            <div class="field-info">
+                <span class="field-name">活动经历:</span>
+                <span class="field-desc">将各类经历的时长转换为数值类型，无填写则默认为0</span>
+            </div>
+            <div class="field-info">
+                <span class="field-name">学校偏好:</span>
+                <span class="field-desc">包括职业兴趣、位置、规模、学费滑块值、专业、师生关系、学校氛围和国际化程度</span>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2>4. 代码示例</h2>
+            <div class="data-structure">
+                <pre>// 在 onSubmit 函数中组织数据
+const requestData = {
+  academics: {
+    gpa,
+    sat: testType === 'SAT' ? testScore : null,
+    act: testType === 'ACT' ? testScore : null,
+    toefl: englishTestType.includes('托福') ? englishScore : null,
+    ielts: englishTestType.includes('雅思') ? englishScore : null,
+    det: englishTestType.includes('多邻国') ? englishScore : null
+  },
+  activities: {
+    research_months: parseInt(researchExperience) || 0,
+    research_type: researchType,
+    volunteer_months: parseInt(volunteerExperience) || 0,
+    volunteer_type: volunteerType,
+    internship_months: parseInt(internshipExperience) || 0,
+    internship_type: internshipType,
+    art_months: parseInt(artPractice) || 0,
+    art_type: artPracticeType,
+    full_time_work_months: parseInt(fullTimeWork) || 0,
+    full_time_work_type: fullTimeWorkType,
+    honors: honors
+  },
+  preferences: {
+    career_interest: careerInterest,
+    location: location,
+    size: schoolSize,
+    tuition: tuition,
+    major: major,
+    teacher_student_ratio: teacherStudentRatio,
+    school_atmosphere: schoolAtmosphere,
+    international_level: internationalLevel
+  }
+};
+
+// 发送数据到后端
+wx.request({
+  url: "http://192.168.3.99:8000/recommend",
+  method: "POST",
+  header: { "Content-Type": "application/json" },
+  data: requestData,
+  success: (res) => {
+    // 处理成功响应
+  },
+  fail: (err) => {
+    // 处理失败情况
+  }
+});</pre>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2>5. 实际数据示例</h2>
+            <div class="data-example">
+                <pre>{
+  "academics": {
+    "gpa": "3.8",
+    "sat": "1450",
+    "act": null,
+    "toefl": null,
+    "ielts": "7.5",
+    "det": null
+  },
+  "activities": {
+    "research_months": 12,
+    "research_type": "校内科研项目",
+    "volunteer_months": 6,
+    "volunteer_type": "公益组织",
+    "internship_months": 3,
+    "internship_type": "科技公司",
+    "art_months": 0,
+    "art_type": "",
+    "full_time_work_months": 0,
+    "full_time_work_type": "",
+    "honors": "数学竞赛省一等奖"
+  },
+  "preferences": {
+    "career_interest": "做科研、进大学、企业科研部门当老师、研发人员",
+    "location": "城市",
+    "size": "正常（10，000+）",
+    "tuition": 150000,
+    "major": "计算机科学",
+    "teacher_student_ratio": "更关心（师生比高）",
+    "school_atmosphere": "Nerdy School",
+    "international_level": "高"
+  }
+}</pre>
+            </div>
+        </div>
+        
+        <div class="note">
+            <strong>重要提示:</strong>
+            <ul>
+                <li>数据通过 HTTP POST 请求发送到后端服务器的 <span class="highlight">http://192.168.3.99:8000/recommend</span> 地址</li>
+                <li>内容类型为 <code>application/json</code></li>
+                <li>考试成绩根据用户选择的考试类型自动填入相应字段</li>
+                <li>活动经历的时长被转换为整数类型，未填写则默认为0</li>
+                <li>学费通过滑块选择，范围为10,000至200,000元</li>
+                <li>所有必填项在提交前会进行验证，确保数据完整性</li>
+                <li>数据发送成功后，会跳转到详情页展示推荐结果</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

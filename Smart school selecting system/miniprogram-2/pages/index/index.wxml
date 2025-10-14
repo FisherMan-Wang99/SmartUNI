@@ -10,57 +10,193 @@
   <!-- 学术成绩卡片 -->
   <view class="card">
     <view class="card-title">标化成绩</view>
-    <input placeholder="请输入 GPA" value="{{gpa}}" bindinput="onInputGPA" class="input"/>
-    <input placeholder="请输入 SAT" value="{{sat}}" bindinput="onInputSAT" class="input"/>
-    <input placeholder="请输入 TOEFL" value="{{toefl}}" bindinput="onInputTOEFL" class="input"/>
+    <view class="question-item">
+      <view class="question-number">1.</view>
+      <input placeholder="4分制，百分制皆可" value="{{gpa}}" bindinput="onInputGPA" class="input question-input"/>
+    </view>
+    <view class="question-item">
+      <view class="question-number">2.</view>
+      <picker mode="selector" range="{{testTypeOptions}}" bindchange="onTestTypeChange">
+        <view class="picker question-picker">{{testType || "请选择考试类型"}}</view>
+      </picker>
+    </view>
+    <view class="question-item">
+      <view class="question-number">3.</view>
+      <input placeholder="请输入考试成绩" value="{{testScore}}" bindinput="onInputTestScore" class="input question-input"/>
+    </view>
+    <view class="question-item">
+      <view class="question-number">4.</view>
+      <picker mode="selector" range="{{englishTestOptions}}" bindchange="onEnglishTestTypeChange">
+        <view class="picker question-picker">{{englishTestType || "请选择英语考试类型"}}</view>
+      </picker>
+    </view>
+    <view class="question-item">
+      <view class="question-number">5.</view>
+      <input placeholder="请输入英语成绩" value="{{englishScore}}" bindinput="onInputEnglishScore" class="input question-input"/>
+    </view>
   </view>
 
-  <!-- 研究经历卡片 -->
+  <!-- 活动经历卡片 -->
   <view class="card">
-    <view class="card-title">学生背景</view>
-    <picker mode="selector" range="{{backgroundOptions}}" bindchange="onBackgroundChange">
-      <view class="picker">{{background || "请选择研究经历"}}</view>
-    </picker>
-    <picker mode="selector" range="{{internshipOptions}}" bindchange="onInternshipChange">
-      <view class="picker">{{internship || "请选择实习经历"}}</view>
-    </picker>
-    <picker mode="selector" range="{{extracurricularOptions}}" bindchange="onExtracurricularChange">
-      <view class="picker">{{extracurricular || "请选择课外活动"}}</view>
-    </picker>
+    <view class="card-title">活动经历</view>
+    
+    <!-- 课外科研 -->
+    <view class="activity-section">
+      <view class="activity-title">
+        <span class="question-number">6.</span> 课外科研（包括独立研究）：
+      </view>
+      <picker mode="selector" range="{{researchTypeOptions}}" bindchange="onResearchTypeChange">
+        <view class="picker activity-picker">{{researchType || "请选择科研类型"}}</view>
+      </picker>
+      <view class="input-group">
+        <view class="input-label">时长（月）：</view>
+        <input type="digit" placeholder="请输入" value="{{researchExperience}}" bindinput="onInputResearchExperience" class="input short"/>
+      </view>
+    </view>
+    
+    <!-- 志愿者活动 -->
+    <view class="activity-section">
+      <view class="activity-title">
+        <span class="question-number">7.</span> 志愿者活动（包括独立、非机构、学校组织活动）：
+      </view>
+      <picker mode="selector" range="{{volunteerTypeOptions}}" bindchange="onVolunteerTypeChange">
+        <view class="picker activity-picker">{{volunteerType || "请选择志愿者活动类型"}}</view>
+      </picker>
+      <view class="input-group">
+        <view class="input-label">时长（月）：</view>
+        <input type="digit" placeholder="请输入" value="{{volunteerExperience}}" bindinput="onInputVolunteerExperience" class="input short"/>
+      </view>
+    </view>
+    
+    <!-- 兼职、实习经历 -->
+    <view class="activity-section">
+      <view class="activity-title">
+        <span class="question-number">8.</span> 兼职、实习经历（包括自己运营公众号等）：
+      </view>
+      <picker mode="selector" range="{{internshipTypeOptions}}" bindchange="onInternshipTypeChange">
+        <view class="picker activity-picker">{{internshipType || "请选择兼职/实习类型"}}</view>
+      </picker>
+      <view class="input-group">
+        <view class="input-label">时长（月）：</view>
+        <input type="digit" placeholder="请输入" value="{{internshipExperience}}" bindinput="onInputInternshipExperience" class="input short"/>
+      </view>
+    </view>
+    
+    <!-- 艺术实践 -->
+    <view class="activity-section">
+      <view class="activity-title">
+        <span class="question-number">9.</span> 艺术实践、练习：
+      </view>
+      <picker mode="selector" range="{{artPracticeTypeOptions}}" bindchange="onArtPracticeTypeChange">
+        <view class="picker activity-picker">{{artPracticeType || "请选择艺术实践类型"}}</view>
+      </picker>
+      <view class="input-group">
+        <view class="input-label">时长（月）：</view>
+        <input type="digit" placeholder="请输入" value="{{artPractice}}" bindinput="onInputArtPractice" class="input short"/>
+      </view>
+    </view>
+    
+    <!-- 全职工作 -->
+    <view class="activity-section">
+      <view class="activity-title">
+        <span class="question-number">10.</span> 全职工作：
+      </view>
+      <picker mode="selector" range="{{fullTimeWorkTypeOptions}}" bindchange="onFullTimeWorkTypeChange">
+        <view class="picker activity-picker">{{fullTimeWorkType || "请选择全职工作类型"}}</view>
+      </picker>
+      <view class="input-group">
+        <view class="input-label">时长（月）：</view>
+        <input type="digit" placeholder="请输入" value="{{fullTimeWork}}" bindinput="onInputFullTimeWork" class="input short"/>
+      </view>
+    </view>
+    
+    <!-- 校级及以上荣誉 -->
+    <view class="activity-section">
+      <view class="input-group">
+        <view class="input-label">
+          <span class="question-number">11.</span> 校级及以上荣誉：
+        </view>
+        <input placeholder="请输入荣誉情况，如：数学竞赛一等奖" value="{{honors}}" bindinput="onInputHonors" class="input full"/>
+      </view>
+    </view>
   </view>
 
   <!-- 学校偏好卡片 -->
   <view class="card">
     <view class="card-title">学校偏好</view>
-    <picker mode="selector" range="{{locationOptions}}" bindchange="onLocationChange">
-      <view class="picker">{{location || "请选择学校位置"}}</view>
-    </picker>
-    <picker mode="selector" range="{{sizeOptions}}" bindchange="onSizeChange">
-      <view class="picker">{{size || "请选择学校规模"}}</view>
-    </picker>
-    <picker mode="selector" range="{{climateOptions}}" bindchange="onClimateChange">
-      <view class="picker">{{climate || "请选择气候"}}</view>
-    </picker>
-    <picker mode="selector" range="{{majorOptions}}" bindchange="onMajorChange">
-      <view class="picker">{{major || "请选择专业"}}</view>
-    </picker>
-    <picker mode="selector" range="{{preferenceOptions}}" bindchange="onPreferenceChange">
-      <view class="picker">{{preference || "请选择学校类型"}}</view>
-    </picker>
-    <picker mode="selector" range="{{teachingStyleOptions}}" bindchange="onTeachingStyleChange">
-      <view class="picker">{{teachingStyle || "请选择教学风格"}}</view>
-    </picker>
-  </view>
-
-  <!-- 性格特质卡片 -->
-  <view class="card">
-    <view class="card-title">性格特质</view>
-    <picker mode="selector" range="{{personalityTypeOptions}}" bindchange="onPersonalityTypeChange">
-      <view class="picker">{{personalityType || "请选择性格类别"}}</view>
-    </picker>
-    <picker mode="selector" range="{{personalityOptions}}" bindchange="onPersonalityChange">
-      <view class="picker">{{personality || "请选择性格 (MBTI)"}}</view>
-    </picker>
+    
+    <!-- 职业兴趣排序题 -->
+    <view class="sorting-section">
+      <view class="sorting-title">
+        <span class="question-number">12.</span> 请选择并排序您最在意的职业兴趣（最多5个）
+      </view>
+      
+      <!-- 职业兴趣选项区域 -->
+      <view class="options-container">
+        <block wx:for="{{careerInterestOptions}}" wx:key="id">
+          <view class="option-item {{item.checked ? 'checked' : ''}}" bindtap="onCareerInterestToggle" data-id="{{item.id}}">
+            <view class="option-name">{{item.name}}</view>
+            <view class="check-icon">{{item.checked ? '✓' : ''}}</view>
+          </view>
+        </block>
+      </view>
+      
+      <!-- 排序区域 -->
+      <view class="sorting-container" wx:if="{{selectedCareerInterests.length > 0}}">
+        <view class="sorting-subtitle">拖拽排序您选择的兴趣（从上到下为1-5名）</view>
+        <view class="sorted-list">
+          <block wx:for="{{selectedCareerInterests}}" wx:key="id">
+            <view class="sorted-item {{index === isDragging ? 'dragging' : ''}}" data-index="{{index}}" bindtouchstart="onDragStart" bindtouchmove="onDragMove" bindtouchend="onDragEnd" style="transform: translateY({{index === isDragging ? dragY : 0}}rpx);">
+                <view class="drag-handle">⋮⋮</view>
+                <view class="sorted-name">{{index + 1}}. {{item.name}}</view>
+              </view>
+          </block>
+        </view>
+      </view>
+    </view>
+    <view class="question-item">
+      <view class="question-number">13.</view>
+      <picker mode="selector" range="{{locationOptions}}" bindchange="onLocationChange">
+        <view class="picker question-picker">{{location || "位置：大城市——城市——无所谓——边郊——乡村/大学城"}}</view>
+      </picker>
+    </view>
+    <view class="question-item">
+      <view class="question-number">14.</view>
+      <picker mode="selector" range="{{schoolSizeOptions}}" bindchange="onSchoolSizeChange">
+        <view class="picker question-picker">{{schoolSize || "规模：巨大（50，000+）——大（20，000+）——（正常10，000+）——偏小（5，000+）——小（<5，000）"}}</view>
+      </picker>
+    </view>
+    <view class="question-item">
+      <view class="question-number">15.</view>
+      <view class="input-group full-width">
+        <view class="input-label">学费：¥{{tuition}}（拖动滑块调整）</view>
+        <slider min="10000" max="200000" value="{{tuition}}" show-value block-size="22" activeColor="#1a73e8" backgroundColor="#e0e0e0" bindchange="onTuitionChange"/>
+      </view>
+    </view>
+    <view class="question-item">
+      <view class="question-number">16.</view>
+      <picker mode="selector" range="{{majorOptions}}" bindchange="onMajorChange">
+        <view class="picker question-picker">{{major || "请选择专业"}}</view>
+      </picker>
+    </view>
+    <view class="question-item">
+      <view class="question-number">17.</view>
+      <picker mode="selector" range="{{teacherStudentRatioOptions}}" bindchange="onTeacherStudentRatioChange">
+        <view class="picker question-picker">{{teacherStudentRatio || "师生关系：更关心（师生比高）——更摸鱼/自主（师生比低）"}}</view>
+      </picker>
+    </view>
+    <view class="question-item">
+      <view class="question-number">18.</view>
+      <picker mode="selector" range="{{schoolAtmosphereOptions}}" bindchange="onSchoolAtmosphereChange">
+        <view class="picker question-picker">{{schoolAtmosphere || "学校氛围：Party School——Neutral——Nerdy School"}}</view>
+      </picker>
+    </view>
+    <view class="question-item">
+      <view class="question-number">19.</view>
+      <picker mode="selector" range="{{internationalLevelOptions}}" bindchange="onInternationalLevelChange">
+        <view class="picker question-picker">{{internationalLevel || "国际化程度：高——低"}}</view>
+      </picker>
+    </view>
   </view>
 
   <!-- 提交按钮 -->

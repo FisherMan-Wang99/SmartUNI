@@ -257,7 +257,7 @@
     transform: scale(1.05);
   }
 }
-
+ 
 /* 按下按钮缩放 + 阴影增强 - 增强的点击效果 */
 .enter-btn:active {
   transform: scale(0.92); /* 更明显的缩放效果 */
