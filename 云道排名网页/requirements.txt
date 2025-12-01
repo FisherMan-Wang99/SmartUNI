@@ -5,3 +5,4 @@ sqlalchemy
 matplotlib
 utils
 plotly.express
+plotly.graph_objects
