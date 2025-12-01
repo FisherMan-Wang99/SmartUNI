@@ -83,7 +83,7 @@ def load_survey_data():
 # --- 数据加载和转换到100分制 ---
 @st.cache_data
 def load_and_normalize_data():
-    df = pd.read_excel('pages/unidata.xlsx') # 学校相关数据
+    df = pd.read_excel('Project/pages/unidata.xlsx') # 学校相关数据
     
     # 确保所有指标都存在
     required_columns = ['大学'] + list(DEFAULT_WEIGHTS.keys())
@@ -613,3 +613,4 @@ st.markdown("""
 </div>
 
 """, unsafe_allow_html=True)
+
