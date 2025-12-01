@@ -3,6 +3,4 @@ pandas
 numpy
 sqlalchemy
 matplotlib
-utils
-plotly
-
+plotly>=5.17.0
