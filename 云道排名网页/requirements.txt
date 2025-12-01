@@ -4,3 +4,4 @@ numpy
 sqlalchemy
 matplotlib
 utils
+plotly.express
