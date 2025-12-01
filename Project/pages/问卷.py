@@ -1,12 +1,12 @@
 import streamlit as st
 from utils import save_final_response
 
-# 隐藏侧边栏和顶部菜单，纯净界面
-hide_style = """
+# 设置页面配置和样式
+st.set_page_config(initial_sidebar_state="expanded")
+
+# 保留内容区域的样式，但移除隐藏元素的设置
+style = """
 <style>
-    [data-testid="stSidebar"] {display:none;}
-    #MainMenu {visibility: hidden;}
-    footer {visibility: hidden;}
     section.main > div.block-container {
         max-width: 700px;
         padding-left: 1rem;
@@ -14,7 +14,7 @@ hide_style = """
     }
 </style>
 """
-st.markdown(hide_style, unsafe_allow_html=True)
+st.markdown(style, unsafe_allow_html=True)
 
 st.title("🎓 美国大学适配问卷")
 

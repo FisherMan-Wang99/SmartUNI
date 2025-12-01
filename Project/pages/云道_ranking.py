@@ -12,15 +12,8 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# 隐藏菜单
-hide_style = """
-<style>
-    [data-testid="stSidebar"] {display: none;}
-    #MainMenu {visibility: hidden;}
-    footer {visibility: hidden;}
-</style>
-"""
-st.markdown(hide_style, unsafe_allow_html=True)
+# 移除隐藏样式，确保侧边栏正常显示
+# 保留页面配置设置但删除隐藏相关的CSS
 
 # --- 默认权重配置 ---
 DEFAULT_WEIGHTS = {
@@ -83,7 +76,7 @@ def load_survey_data():
 # --- 数据加载和转换到100分制 ---
 @st.cache_data
 def load_and_normalize_data():
-    df = pd.read_excel('Project/pages/unidata.xlsx') # 学校相关数据
+    df = pd.read_excel('data/unidata.xlsx') # 学校相关数据
     
     # 确保所有指标都存在
     required_columns = ['大学'] + list(DEFAULT_WEIGHTS.keys())
@@ -265,65 +258,132 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# --- 侧边栏权重控制 ---
-with st.sidebar:
-    st.markdown('<div class="sidebar-header">⚖️ 权重配置</div>', unsafe_allow_html=True)
-    init_weights()
+# --- 权重管理模块 ---（确保侧边栏功能正常）
+def reset_all_weights():
+    for key, val in DEFAULT_WEIGHTS.items():
+        st.session_state[f"{key}_weight"] = val
+    st.rerun()
+
+def init_weights():
+    for key, val in DEFAULT_WEIGHTS.items():
+        if f"{key}_weight" not in st.session_state:
+            st.session_state[f"{key}_weight"] = val
+
+# 初始化权重
+init_weights()
+
+# --- 权重管理功能 ---（允许用户调节unidata数据权重）
+def init_weights():
+    # 初始化权重到session_state
+    for key, val in DEFAULT_WEIGHTS.items():
+        if f"weight_{key}" not in st.session_state:
+            st.session_state[f"weight_{key}"] = val
+
+def reset_weights():
+    # 重置所有权重为默认值
+    for key, val in DEFAULT_WEIGHTS.items():
+        st.session_state[f"weight_{key}"] = val
+    st.rerun()
+
+# 初始化权重
+init_weights()
+
+# --- 侧边栏权重调节功能 ---
+st.sidebar.title("⚖️ 数据权重调节")
+st.sidebar.info(
+    "自定义调节各项指标的权重，\n" +
+    "影响大学排名的计算结果。"
+)
+
+# 重置按钮
+if st.sidebar.button("🔄 重置为默认权重"):
+    reset_weights()
+
+st.sidebar.divider()
+
+# 创建可折叠的权重调节区域
+with st.sidebar.expander("📊 调整各项指标权重", expanded=False):
+    # 计算当前权重总和
+    current_weights = [st.session_state[f"weight_{key}"] for key in metrics]
+    total_weight = sum(current_weights)
     
-    if st.button("♻️ 恢复默认权重", help="将所有指标权重重置为默认值"):
-        reset_all_weights()
+    # 分组显示指标，避免界面过长
+    # 将指标分为学术类、就业类和生活类三组
+    academic_metrics = ['Academics', 'Learning Opportunities', 'Learning Facilities', 'Academic Reputation']
+    career_metrics = ['Preparation for Career', 'Opportunities', 'Recommendation Score']
+    life_metrics = ['Safety', 'Happiness', 'Infrastructure', 'International friendliness', 
+                   'Location', 'Social', 'Character Development']
     
-    st.markdown("""
-    <div style="height: 1px; background: linear-gradient(to right, transparent, #e1e5eb, transparent); 
-        margin: 10px 0 15px 0;"></div>
-    """, unsafe_allow_html=True)
-    
-    mode = st.radio("调整方式", ["滑块调整", "手动输入"], index=0, horizontal=True)
-    
-    if mode == "滑块调整":
-        st.write("使用滑块调整各维度权重：")
-        for key in metrics:
-            st.session_state[f"{key}_weight"] = st.slider(
-                f"{key} 权重", 0.0, 1.0, st.session_state.get(f"{key}_weight", DEFAULT_WEIGHTS[key]), 0.01,
-                key=f"slider_{key}",
-                help=f"调整{key}指标的权重"
+    # 学术指标权重调节
+    st.subheader("🎓 学术相关")
+    for metric in academic_metrics:
+        if metric in metrics:
+            st.session_state[f"weight_{metric}"] = st.slider(
+                f"{metric}", 
+                min_value=0.0, 
+                max_value=0.3,  # 限制单个指标最大权重
+                value=st.session_state[f"weight_{metric}"], 
+                step=0.01,
+                help=f"调整{metric}指标的权重"
             )
     
-    elif mode == "手动输入":
-        st.write("精确输入各维度权重（0.0~1.0）：")
-        cols = st.columns(2)
-        for i, key in enumerate(metrics):
-            with cols[i % 2]:
-                st.session_state[f"{key}_weight"] = st.number_input(
-                    f"{key} 权重", 0.0, 1.0, st.session_state.get(f"{key}_weight", DEFAULT_WEIGHTS[key]), 0.01,
-                    format="%.2f", key=f"input_{key}",
-                    help=f"精确设置{key}指标的权重"
-                )
+    st.divider()
     
-    st.markdown("---")
-    with st.expander("📈 权重统计", expanded=True):
-        current_weights = [st.session_state[f"{key}_weight"] for key in metrics]
-        total_weight = sum(current_weights)
-        
-        col1, col2 = st.columns(2)
-        col1.metric("当前总权重", f"{total_weight:.2f}", 
-                   delta="正常" if 0.99 <= total_weight <= 1.01 else "需调整",
-                   delta_color="normal")
-        
-        if col2.button("自动归一化", help="自动调整所有权重使总和为1"):
-            if total_weight > 0:
-                for key in metrics:
-                    st.session_state[f"{key}_weight"] /= total_weight
-                st.rerun()
-        
-        st.write("各维度实际占比：")
-        for key, weight in zip(metrics, current_weights):
-            percent = (weight / total_weight) * 100 if total_weight > 0 else 0
-            st.progress(percent / 100, text=f"{key}: {weight:.2f} → {percent:.1f}%")
+    # 就业指标权重调节
+    st.subheader("💼 就业相关")
+    for metric in career_metrics:
+        if metric in metrics:
+            st.session_state[f"weight_{metric}"] = st.slider(
+                f"{metric}", 
+                min_value=0.0, 
+                max_value=0.3,
+                value=st.session_state[f"weight_{metric}"], 
+                step=0.01,
+                help=f"调整{metric}指标的权重"
+            )
+    
+    st.divider()
+    
+    # 生活指标权重调节
+    st.subheader("🏫 校园生活")
+    for metric in life_metrics:
+        if metric in metrics:
+            st.session_state[f"weight_{metric}"] = st.slider(
+                f"{metric}", 
+                min_value=0.0, 
+                max_value=0.3,
+                value=st.session_state[f"weight_{metric}"], 
+                step=0.01,
+                help=f"调整{metric}指标的权重"
+            )
+    
+    # 归一化按钮
+    st.divider()
+    if st.button("✅ 自动归一化权重"):
+        if total_weight > 0:
+            for key in metrics:
+                st.session_state[f"weight_{key}"] /= total_weight
+            st.rerun()
+    
+    # 显示权重总和状态
+    st.info(f"当前权重总和: {total_weight:.2f} (建议为1.00)")
 
-# 计算加权总分
-weights = [st.session_state[f"{key}_weight"] for key in metrics]
-df['总分'] = sum(df[metric] * weight for metric, weight in zip(metrics, weights))
+st.sidebar.divider()
+st.sidebar.text("使用提示:")
+st.sidebar.text("• 权重总和应为1.00")
+st.sidebar.text("• 调整后点击归一化")
+st.sidebar.text("• 可随时重置默认值")
+
+# 计算加权总分（使用用户自定义权重）
+user_weights = [st.session_state[f"weight_{key}"] for key in metrics]
+# 确保权重归一化
+total_weight = sum(user_weights)
+if total_weight > 0:
+    normalized_weights = [w/total_weight for w in user_weights]
+    df['总分'] = sum(df[metric] * weight for metric, weight in zip(metrics, normalized_weights))
+else:
+    # 如果所有权重都为0，使用默认权重
+    df['总分'] = sum(df[metric] * DEFAULT_WEIGHTS[metric] for metric in metrics)
 
 # 显示排名结果
 st.markdown('<div class="section-title">🏆 综合排名 (满分100分)</div>', unsafe_allow_html=True)
@@ -611,6 +671,4 @@ st.markdown("""
     <p>© 2023 云道教育研究院 | 数据版本: v2.3.0 (100分制)</p>
     <p>本排名系统根据用户自定义权重计算，结果仅供参考</p>
 </div>
-
 """, unsafe_allow_html=True)
-

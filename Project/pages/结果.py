@@ -54,15 +54,13 @@ st.markdown("""
 4. **考试准备** - 考虑是否需要重考SAT/ACT提高分数
 """)
 
-# 隐藏菜单
-hide_style = """
+# 移除隐藏样式，确保所有内容正常显示
+# 自定义CSS样式
+st.markdown("""
 <style>
-    [data-testid="stSidebar"] {display: none;}
-    #MainMenu {visibility: hidden;}
-    footer {visibility: hidden;}
+/* 移除所有隐藏样式 */
 </style>
-"""
-st.markdown(hide_style, unsafe_allow_html=True)
+""", unsafe_allow_html=True)
 
 # 重新测试选项
 st.markdown("---")
