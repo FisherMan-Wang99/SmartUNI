@@ -83,7 +83,7 @@ def load_survey_data():
 # --- 数据加载和转换到100分制 ---
 @st.cache_data
 def load_and_normalize_data():
-    df = pd.read_excel('data/unidata.xlsx') # 学校相关数据
+    df = pd.read_excel('pages/unidata.xlsx') # 学校相关数据
     
     # 确保所有指标都存在
     required_columns = ['大学'] + list(DEFAULT_WEIGHTS.keys())
@@ -611,4 +611,5 @@ st.markdown("""
     <p>© 2023 云道教育研究院 | 数据版本: v2.3.0 (100分制)</p>
     <p>本排名系统根据用户自定义权重计算，结果仅供参考</p>
 </div>
+
 """, unsafe_allow_html=True)
