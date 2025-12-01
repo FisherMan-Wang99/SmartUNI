@@ -38,7 +38,7 @@ DEFAULT_WEIGHTS = {
 def load_survey_data():
     try:
         # 假设问卷结果存储在'survey_results.xlsx'文件中
-        survey_df = pd.read_excel('data/survey_results.xlsx')
+        survey_df = pd.read_excel('Project/data/survey_results.xlsx')
         
         # 检查必要的列是否存在
         required_columns = ['红色', '紫色', '蓝色', '金色', '绿色']
@@ -671,4 +671,5 @@ st.markdown("""
     <p>© 2023 云道教育研究院 | 数据版本: v2.3.0 (100分制)</p>
     <p>本排名系统根据用户自定义权重计算，结果仅供参考</p>
 </div>
+
 """, unsafe_allow_html=True)
