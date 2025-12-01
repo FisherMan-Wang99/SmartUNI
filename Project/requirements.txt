@@ -4,3 +4,4 @@ numpy
 sqlalchemy
 matplotlib
 plotly>=5.17.0
+openpyxl
