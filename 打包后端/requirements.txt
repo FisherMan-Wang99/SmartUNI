@@ -1,0 +1,27 @@
+# 基础 Web 框架
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+
+# 数据库与网络
+sqlalchemy==2.0.23
+requests==2.31.0
+
+# OpenAI
+openai==1.12.0
+tiktoken==0.5.2
+httpx==0.27.2
+
+# 数据处理
+pandas==1.5.3
+numpy==1.24.3
+
+# 向量数据库
+chromadb==0.4.22
+
+# 机器学习核心 - PyTorch (通过官方源获取CPU版)
+torch==2.2.2
+
+# HuggingFace 生态 - 关键兼容版本组合
+transformers==4.36.2
+huggingface_hub==0.20.1  # 一个明确包含 cached_download 的旧版本
+sentence-transformers==2.6.1  # 与上述版本兼容的稳定版
