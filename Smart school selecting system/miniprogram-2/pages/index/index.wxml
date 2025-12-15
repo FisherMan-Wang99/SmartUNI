@@ -5,7 +5,7 @@
   <view class="header-title">智能选校助手</view>
   <view class="header-subtitle">AI 驱动的个性化推荐</view>
 </view>
- 
+  
 <view class="container">
   <!-- 学术成绩卡片 -->
   <view class="card">
@@ -45,12 +45,22 @@
       <view class="activity-title">
         <span class="question-number">6.</span> 课外科研（包括独立研究）：
       </view>
-      <picker mode="selector" range="{{researchTypeOptions}}" bindchange="onResearchTypeChange">
-        <view class="picker activity-picker">{{researchType || "请选择科研类型"}}</view>
-      </picker>
-      <view class="input-group">
-        <view class="input-label">时长（月）：</view>
-        <input type="digit" placeholder="请输入" value="{{researchExperience}}" bindinput="onInputResearchExperience" class="input short"/>
+      <view class="options-container">
+        <block wx:for="{{researchTypeOptions}}" wx:key="index">
+          <view class="option-item {{researchType.includes(item) ? 'checked' : ''}}" bindtap="onResearchTypeToggle" data-type="{{item}}">
+            <view class="option-name">{{item}}</view>
+            <view class="check-icon">{{researchType.includes(item) ? '✓' : ''}}</view>
+          </view>
+        </block>
+      </view>
+      <!-- 为每个选中的类型显示时长输入 -->
+      <view wx:if="{{researchType.length > 0}}" class="durations-container">
+        <block wx:for="{{researchType}}" wx:key="index">
+          <view class="input-group">
+            <view class="input-label">{{item}} 时长（月）：</view>
+            <input type="digit" placeholder="请输入" value="{{researchExperiences[item]}}" bindinput="onInputResearchExperience" data-type="{{item}}" class="input short"/>
+          </view>
+        </block>
       </view>
     </view>
     
@@ -59,12 +69,22 @@
       <view class="activity-title">
         <span class="question-number">7.</span> 志愿者活动（包括独立、非机构、学校组织活动）：
       </view>
-      <picker mode="selector" range="{{volunteerTypeOptions}}" bindchange="onVolunteerTypeChange">
-        <view class="picker activity-picker">{{volunteerType || "请选择志愿者活动类型"}}</view>
-      </picker>
-      <view class="input-group">
-        <view class="input-label">时长（月）：</view>
-        <input type="digit" placeholder="请输入" value="{{volunteerExperience}}" bindinput="onInputVolunteerExperience" class="input short"/>
+      <view class="options-container">
+        <block wx:for="{{volunteerTypeOptions}}" wx:key="index">
+          <view class="option-item {{volunteerType.includes(item) ? 'checked' : ''}}" bindtap="onVolunteerTypeToggle" data-type="{{item}}">
+            <view class="option-name">{{item}}</view>
+            <view class="check-icon">{{volunteerType.includes(item) ? '✓' : ''}}</view>
+          </view>
+        </block>
+      </view>
+      <!-- 为每个选中的类型显示时长输入 -->
+      <view wx:if="{{volunteerType.length > 0}}" class="durations-container">
+        <block wx:for="{{volunteerType}}" wx:key="index">
+          <view class="input-group">
+            <view class="input-label">{{item}} 时长（月）：</view>
+            <input type="digit" placeholder="请输入" value="{{volunteerExperiences[item]}}" bindinput="onInputVolunteerExperience" data-type="{{item}}" class="input short"/>
+          </view>
+        </block>
       </view>
     </view>
     
@@ -73,12 +93,22 @@
       <view class="activity-title">
         <span class="question-number">8.</span> 兼职、实习经历（包括自己运营公众号等）：
       </view>
-      <picker mode="selector" range="{{internshipTypeOptions}}" bindchange="onInternshipTypeChange">
-        <view class="picker activity-picker">{{internshipType || "请选择兼职/实习类型"}}</view>
-      </picker>
-      <view class="input-group">
-        <view class="input-label">时长（月）：</view>
-        <input type="digit" placeholder="请输入" value="{{internshipExperience}}" bindinput="onInputInternshipExperience" class="input short"/>
+      <view class="options-container">
+        <block wx:for="{{internshipTypeOptions}}" wx:key="index">
+          <view class="option-item {{internshipType.includes(item) ? 'checked' : ''}}" bindtap="onInternshipTypeToggle" data-type="{{item}}">
+            <view class="option-name">{{item}}</view>
+            <view class="check-icon">{{internshipType.includes(item) ? '✓' : ''}}</view>
+          </view>
+        </block>
+      </view>
+      <!-- 为每个选中的类型显示时长输入 -->
+      <view wx:if="{{internshipType.length > 0}}" class="durations-container">
+        <block wx:for="{{internshipType}}" wx:key="index">
+          <view class="input-group">
+            <view class="input-label">{{item}} 时长（月）：</view>
+            <input type="digit" placeholder="请输入" value="{{internshipExperiences[item]}}" bindinput="onInputInternshipExperience" data-type="{{item}}" class="input short"/>
+          </view>
+        </block>
       </view>
     </view>
     
@@ -87,12 +117,22 @@
       <view class="activity-title">
         <span class="question-number">9.</span> 艺术实践、练习：
       </view>
-      <picker mode="selector" range="{{artPracticeTypeOptions}}" bindchange="onArtPracticeTypeChange">
-        <view class="picker activity-picker">{{artPracticeType || "请选择艺术实践类型"}}</view>
-      </picker>
-      <view class="input-group">
-        <view class="input-label">时长（月）：</view>
-        <input type="digit" placeholder="请输入" value="{{artPractice}}" bindinput="onInputArtPractice" class="input short"/>
+      <view class="options-container">
+        <block wx:for="{{artPracticeTypeOptions}}" wx:key="index">
+          <view class="option-item {{artPracticeType.includes(item) ? 'checked' : ''}}" bindtap="onArtPracticeTypeToggle" data-type="{{item}}">
+            <view class="option-name">{{item}}</view>
+            <view class="check-icon">{{artPracticeType.includes(item) ? '✓' : ''}}</view>
+          </view>
+        </block>
+      </view>
+      <!-- 为每个选中的类型显示时长输入 -->
+      <view wx:if="{{artPracticeType.length > 0}}" class="durations-container">
+        <block wx:for="{{artPracticeType}}" wx:key="index">
+          <view class="input-group">
+            <view class="input-label">{{item}} 时长（月）：</view>
+            <input type="digit" placeholder="请输入" value="{{artPractices[item]}}" bindinput="onInputArtPractice" data-type="{{item}}" class="input short"/>
+          </view>
+        </block>
       </view>
     </view>
     
@@ -101,12 +141,22 @@
       <view class="activity-title">
         <span class="question-number">10.</span> 全职工作：
       </view>
-      <picker mode="selector" range="{{fullTimeWorkTypeOptions}}" bindchange="onFullTimeWorkTypeChange">
-        <view class="picker activity-picker">{{fullTimeWorkType || "请选择全职工作类型"}}</view>
-      </picker>
-      <view class="input-group">
-        <view class="input-label">时长（月）：</view>
-        <input type="digit" placeholder="请输入" value="{{fullTimeWork}}" bindinput="onInputFullTimeWork" class="input short"/>
+      <view class="options-container">
+        <block wx:for="{{fullTimeWorkTypeOptions}}" wx:key="index">
+          <view class="option-item {{fullTimeWorkType.includes(item) ? 'checked' : ''}}" bindtap="onFullTimeWorkTypeToggle" data-type="{{item}}">
+            <view class="option-name">{{item}}</view>
+            <view class="check-icon">{{fullTimeWorkType.includes(item) ? '✓' : ''}}</view>
+          </view>
+        </block>
+      </view>
+      <!-- 为每个选中的类型显示时长输入 -->
+      <view wx:if="{{fullTimeWorkType.length > 0}}" class="durations-container">
+        <block wx:for="{{fullTimeWorkType}}" wx:key="index">
+          <view class="input-group">
+            <view class="input-label">{{item}} 时长（月）：</view>
+            <input type="digit" placeholder="请输入" value="{{fullTimeWorks[item]}}" bindinput="onInputFullTimeWork" data-type="{{item}}" class="input short"/>
+          </view>
+        </block>
       </view>
     </view>
     
@@ -128,22 +178,11 @@
     <!-- 职业兴趣排序题 -->
     <view class="sorting-section">
       <view class="sorting-title">
-        <span class="question-number">12.</span> 请选择并排序您最在意的职业兴趣（最多5个）
+        <span class="question-number">12.</span> 请拖拽排序您的职业兴趣（从上到下为优先级从高到低）
       </view>
       
-      <!-- 职业兴趣选项区域 -->
-      <view class="options-container">
-        <block wx:for="{{careerInterestOptions}}" wx:key="id">
-          <view class="option-item {{item.checked ? 'checked' : ''}}" bindtap="onCareerInterestToggle" data-id="{{item.id}}">
-            <view class="option-name">{{item.name}}</view>
-            <view class="check-icon">{{item.checked ? '✓' : ''}}</view>
-          </view>
-        </block>
-      </view>
-      
-      <!-- 排序区域 -->
-      <view class="sorting-container" wx:if="{{selectedCareerInterests.length > 0}}">
-        <view class="sorting-subtitle">拖拽排序您选择的兴趣（从上到下为1-5名）</view>
+      <!-- 排序区域 - 直接显示所有职业兴趣 -->
+      <view class="sorting-container">
         <view class="sorted-list">
           <block wx:for="{{selectedCareerInterests}}" wx:key="id">
             <view class="sorted-item {{index === isDragging ? 'dragging' : ''}}" data-index="{{index}}" bindtouchstart="onDragStart" bindtouchmove="onDragMove" bindtouchend="onDragEnd" style="transform: translateY({{index === isDragging ? dragY : 0}}rpx);">
@@ -155,24 +194,74 @@
       </view>
     </view>
     <view class="question-item">
-      <view class="question-number">13.</view>
-      <picker mode="selector" range="{{locationOptions}}" bindchange="onLocationChange">
-        <view class="picker question-picker">{{location || "位置：大城市——城市——无所谓——边郊——乡村/大学城"}}</view>
-      </picker>
-    </view>
-    <view class="question-item">
-      <view class="question-number">14.</view>
-      <picker mode="selector" range="{{schoolSizeOptions}}" bindchange="onSchoolSizeChange">
-        <view class="picker question-picker">{{schoolSize || "规模：巨大（50，000+）——大（20，000+）——（正常10，000+）——偏小（5，000+）——小（<5，000）"}}</view>
-      </picker>
-    </view>
-    <view class="question-item">
-      <view class="question-number">15.</view>
-      <view class="input-group full-width">
-        <view class="input-label">学费：¥{{tuition}}（拖动滑块调整）</view>
-        <slider min="10000" max="200000" value="{{tuition}}" show-value block-size="22" activeColor="#1a73e8" backgroundColor="#e0e0e0" bindchange="onTuitionChange"/>
+        <view class="question-number">13.</view>
+        <view class="input-group full-width">
+          <view class="input-label">位置：{{locationOptions[location]}}</view>
+          <view class="slider-wrapper">
+            <view class="slider-markers">
+              <view class="marker"></view>
+              <view class="marker"></view>
+              <view class="marker"></view>
+              <view class="marker"></view>
+              <view class="marker"></view>
+            </view>
+            <slider min="0" max="4" value="{{location}}" step="1" activeColor="#1a73e8" backgroundColor="#e0e0e0" bindchange="onLocationChange"/>
+          </view>
+          <view class="slider-labels">
+            <text>大城市</text>
+            <text>普通城市</text>
+            <text>无所谓</text>
+            <text>边郊</text>
+            <text>乡村</text>
+          </view>
+        </view>
       </view>
-    </view>
+    <view class="question-item">
+        <view class="question-number">14.</view>
+        <view class="input-group full-width">
+          <view class="input-label">规模：{{schoolSizeOptions[schoolSize]}}</view>
+          <view class="slider-wrapper">
+            <view class="slider-markers">
+              <view class="marker"></view>
+              <view class="marker"></view>
+              <view class="marker"></view>
+              <view class="marker"></view>
+              <view class="marker"></view>
+            </view>
+            <slider min="0" max="4" value="{{schoolSize}}" step="1" activeColor="#1a73e8" backgroundColor="#e0e0e0" bindchange="onSchoolSizeChange"/>
+          </view>
+          <view class="slider-labels compact">
+            <text>小</text>
+            <text>偏小</text>
+            <text>正常</text>
+            <text>偏大</text>
+            <text>大</text>
+          </view>
+        </view>
+      </view>
+    <view class="question-item">
+        <view class="question-number">15.</view>
+        <view class="input-group full-width">
+          <view class="input-label">学费：¥{{tuition}}（拖动滑块调整）</view>
+          <view class="slider-wrapper">
+            <view class="slider-markers">
+              <view class="marker"></view>
+              <view class="marker"></view>
+              <view class="marker"></view>
+              <view class="marker"></view>
+              
+            </view>
+            <slider min="10000" max="200000" value="{{tuition}}" show-value block-size="22" activeColor="#1a73e8" backgroundColor="#e0e0e0" bindchange="onTuitionChange"/>
+          </view>
+          <view class="slider-labels">
+            <text>10000</text>
+            <text>50000</text>
+            <text>100000</text>
+            <text>150000</text>
+            <text>200000</text>
+          </view>
+        </view>
+      </view>
     <view class="question-item">
       <view class="question-number">16.</view>
       <picker mode="selector" range="{{majorOptions}}" bindchange="onMajorChange">
@@ -180,23 +269,63 @@
       </picker>
     </view>
     <view class="question-item">
-      <view class="question-number">17.</view>
-      <picker mode="selector" range="{{teacherStudentRatioOptions}}" bindchange="onTeacherStudentRatioChange">
-        <view class="picker question-picker">{{teacherStudentRatio || "师生关系：更关心（师生比高）——更摸鱼/自主（师生比低）"}}</view>
-      </picker>
-    </view>
+        <view class="question-number">17.</view>
+        <view class="input-group full-width">
+          <view class="input-label">师生关系：{{teacherStudentRatioOptions[teacherStudentRatio]}}</view>
+          <view class="slider-wrapper">
+            <view class="slider-markers">
+              <view class="marker"></view>
+              <view class="marker"></view>
+              <view class="marker"></view>
+              <view class="marker"></view>
+              <view class="marker"></view>
+            </view>
+            <slider min="0" max="4" value="{{teacherStudentRatio}}" step="1" activeColor="#1a73e8" backgroundColor="#e0e0e0" bindchange="onTeacherStudentRatioChange"/>
+          </view>
+          <view class="slider-labels">
+            <text>极度关心</text>
+            <text>比较关心</text>
+            <text>一般</text>
+            <text>比较自主</text>
+            <text>极度自主</text>
+          </view>
+        </view>
+      </view>
     <view class="question-item">
       <view class="question-number">18.</view>
-      <picker mode="selector" range="{{schoolAtmosphereOptions}}" bindchange="onSchoolAtmosphereChange">
-        <view class="picker question-picker">{{schoolAtmosphere || "学校氛围：Party School——Neutral——Nerdy School"}}</view>
-      </picker>
+      <view class="input-group full-width">
+        <view class="input-label">学校氛围：{{schoolAtmosphereOptions[schoolAtmosphere]}}</view>
+        <view class="slider-labels">
+          <text>Party</text>
+          <text>中性</text>
+          <text>Nerdy</text>
+        </view>
+        <slider min="0" max="2" value="{{schoolAtmosphere}}" step="1" activeColor="#1a73e8" backgroundColor="#e0e0e0" bindchange="onSchoolAtmosphereChange"/>
+      </view>
     </view>
     <view class="question-item">
-      <view class="question-number">19.</view>
-      <picker mode="selector" range="{{internationalLevelOptions}}" bindchange="onInternationalLevelChange">
-        <view class="picker question-picker">{{internationalLevel || "国际化程度：高——低"}}</view>
-      </picker>
-    </view>
+        <view class="question-number">19.</view>
+        <view class="input-group full-width">
+          <view class="input-label">国际化程度：{{internationalLevelOptions[internationalLevel]}}</view>
+          <view class="slider-wrapper">
+            <view class="slider-markers">
+              <view class="marker"></view>
+              <view class="marker"></view>
+              <view class="marker"></view>
+              <view class="marker"></view>
+              <view class="marker"></view>
+            </view>
+            <slider min="0" max="4" value="{{internationalLevel}}" step="1" activeColor="#1a73e8" backgroundColor="#e0e0e0" bindchange="onInternationalLevelChange"/>
+          </view>
+          <view class="slider-labels">
+            <text>非常高</text>
+            <text>比较高</text>
+            <text>一般</text>
+            <text>比较低</text>
+            <text>非常低</text>
+          </view>
+        </view>
+      </view>
   </view>
 
   <!-- 提交按钮 -->

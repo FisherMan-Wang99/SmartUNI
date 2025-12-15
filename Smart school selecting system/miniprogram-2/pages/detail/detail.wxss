@@ -321,46 +321,87 @@
   border: 1rpx solid #b7eb8f;
 }
 
-/* 分析报告样式 */
-.report-section {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  margin: 20rpx;
-  padding: 30rpx;
-  border-radius: 16rpx;
-  color: white;
-  box-shadow: 0 4rpx 20rpx rgba(102, 126, 234, 0.3);
+/* 评估区域通用样式 */
+.assessment-section {
+  margin: 30rpx 0;
+  animation: fadeIn 0.6s ease-out;
 }
 
-.report-content {
-  margin-top: 20rpx;
-  background: rgba(255, 255, 255, 0.1);
-  padding: 25rpx;
-  border-radius: 12rpx;
+/* 第一区域：基于标化成绩的评估 */
+.assessment-section.standardized-assessment {
+  background: white;
+  border-radius: 24rpx;
+  margin: 30rpx;
+  overflow: hidden;
+  box-shadow: 0 8rpx 30rpx rgba(0, 0, 0, 0.05);
+}
+
+/* 第二区域：AI选校分析报告 */
+.assessment-section.ai-analysis {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 24rpx;
+  margin: 30rpx;
+  overflow: hidden;
+  box-shadow: 0 8rpx 30rpx rgba(102, 126, 234, 0.3);
+}
+
+/* 区域分隔器样式 */
+.section-divider {
+  display: flex;
+  align-items: center;
+  padding: 30rpx;
+  background: linear-gradient(135deg, #1976D2 0%, #2196F3 100%);
+  color: white;
+}
+
+.assessment-section.ai-analysis .section-divider {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.divider-icon {
+  font-size: 36rpx;
+  margin-right: 16rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 64rpx;
+  height: 64rpx;
+  border-radius: 16rpx;
+  background: rgba(255, 255, 255, 0.2);
   backdrop-filter: blur(10rpx);
 }
 
-.report-text {
+.divider-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: white;
+  flex: 1;
+}
+
+.divider-subtitle {
+  font-size: 24rpx;
+  color: rgba(255, 255, 255, 0.8);
+  white-space: nowrap;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 8rpx 16rpx;
+  border-radius: 16rpx;
+  backdrop-filter: blur(10rpx);
+}
+
+/* AI分析报告内容样式 */
+.ai-report-content {
+  margin: 30rpx;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 30rpx;
+  border-radius: 16rpx;
+  backdrop-filter: blur(10rpx);
+}
+
+.ai-report-text {
   font-size: 28rpx;
   line-height: 1.7;
   color: white;
   white-space: pre-line;
-}
-
-.section-header {
-  display: flex;
-  flex-direction: column;
-}
-
-.section-title {
-  font-size: 34rpx;
-  font-weight: bold;
-  color: white;
-  margin-bottom: 8rpx;
-}
-  
-.section-subtitle {
-  font-size: 24rpx;
-  color: rgba(255, 255, 255, 0.8);
 }
 
 /* 空状态 */
@@ -375,31 +416,67 @@
   box-shadow: 0 4rpx 12rpx rgba(0,0,0,0.05);
 }
 
-/* 操作按钮 */
-.action-buttons {
+/* 底部按钮 */
+.bottom-buttons {
   display: flex;
-  gap: 20rpx;
+  justify-content: space-between;
   margin-top: 40rpx;
-  padding: 0 20rpx;
+  padding: 0 20rpx 40rpx 20rpx;
 }
 
-.btn-primary, .btn-secondary {
-  flex: 1;
-  border-radius: 12rpx;
-  font-size: 28rpx;
-  height: 80rpx;
-  line-height: 80rpx;
+.back-btn, .next-btn {
+  width: 48%;
+  height: 100rpx;
+  border-radius: 50rpx;
+  font-size: 32rpx;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
 }
 
-.btn-primary {
-  background: #1890ff;
-  color: white;
-}
-
-.btn-secondary {
+.back-btn {
   background: white;
-  color: #1890ff;
-  border: 1rpx solid #1890ff;
+  color: #1976D2;
+  border: 2rpx solid #1976D2;
+}
+
+.back-btn:active {
+  background: #f5f5f5;
+  transform: scale(0.98);
+}
+
+.next-btn {
+  background: linear-gradient(135deg, #4a148c 0%, #7c4dff 100%);
+  color: white;
+  border: none;
+  box-shadow: 0 10rpx 30rpx rgba(124, 77, 255, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.next-btn::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(45deg, transparent, rgba(255,255,255,0.2), transparent);
+  transform: rotate(30deg);
+  opacity: 0;
+  transition: opacity 0.5s;
+}
+
+.next-btn:active {
+  opacity: 0.85;
+  transform: translateY(4rpx);
+  box-shadow: 0 6rpx 20rpx rgba(124, 77, 255, 0.2);
+}
+
+.next-btn:active::before {
+  opacity: 1;
 }
 
 /* 分类特定样式 */

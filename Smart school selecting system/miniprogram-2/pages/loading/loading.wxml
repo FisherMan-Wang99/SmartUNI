@@ -1,0 +1,63 @@
+<!-- pages/loading/loading.wxml -->
+<view class="loading-container">
+  <!-- 顶部标题 -->
+  <view class="header">
+    <text class="title">AI选校中</text>
+    <text class="subtitle">我们的AI正在为您生成个性化推荐</text>
+  </view>
+    
+  <!-- 主要内容区域 -->
+  <view class="content">
+    <!-- 加载动画 -->
+    <view class="loading-animation">
+      <view class="loading-circle">
+        <view class="spinner"></view>
+      </view>
+    </view>
+    
+    <!-- 进度指示器 -->
+    <view class="progress-section">
+      <view class="progress-bar">
+        <view class="progress-fill" style="width: {{progress}}%"></view>
+      </view>
+      <text class="progress-text">{{progress}}%</text>
+    </view>
+     
+    <!-- 倒计时显示 -->
+    <view class="countdown-section">
+      <text class="countdown-text">预计剩余时间: <text class="countdown-number">{{countdownText}}</text></text>
+    </view>
+    
+    <!-- 加载提示信息 -->
+    <view class="loading-steps">
+      <view class="step {{step >= 1 ? 'active' : ''}}">
+        <view class="step-icon">{{step >= 1 ? '✓' : '1'}}</view>
+        <text class="step-text">分析您的个人资料</text>
+      </view>
+      <view class="step-line {{step >= 2 ? 'active' : ''}}"></view>
+      <view class="step {{step >= 2 ? 'active' : ''}}">
+        <view class="step-icon">{{step >= 2 ? '✓' : '2'}}</view>
+        <text class="step-text">匹配理想学校</text>
+      </view>
+      <view class="step-line {{step >= 3 ? 'active' : ''}}"></view>
+      <view class="step {{step >= 3 ? 'active' : ''}}">
+        <view class="step-icon">{{step >= 3 ? '✓' : '3'}}</view>
+        <text class="step-text">生成个性化推荐</text>
+      </view>
+    </view>
+    
+    <!-- 温馨提示 -->
+    <view class="tips-section">
+      <text class="tips-title">温馨提示</text>
+      <text class="tips-content">请耐心等待，AI正在分析您的所有信息并生成最适合您的学校推荐。此过程通常需要约1分钟，请不要关闭页面。</text>
+    </view>
+    
+    <!-- 动画元素 -->
+    <view class="decorative-elements">
+      <view class="bubble bubble-1"></view>
+      <view class="bubble bubble-2"></view>
+      <view class="bubble bubble-3"></view>
+      <view class="bubble bubble-4"></view>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,163 @@
+<view class="page">
+
+<!-- 顶部渐变标题栏 -->
+<view class="header">
+  <view class="header-title">智能选校助手</view>
+  <view class="header-subtitle">AI 驱动的个性化推荐</view>
+</view>
+  
+<view class="container">
+  <!-- 进度指示器 -->
+  <view class="progress-indicator">
+    <view class="progress-bar">
+      <view class="progress-fill" style="width: 66%;"></view>
+    </view>
+    <view class="progress-steps">
+      <view class="step">标化成绩</view>
+      <view class="step active">活动信息</view>
+      <view class="step">学校偏好</view>
+    </view>
+  </view>
+
+  <!-- 活动经历卡片 -->
+  <view class="card">
+    <view class="card-title">活动经历</view>
+    
+    <!-- 课外科研 -->
+    <view class="activity-section">
+      <view class="activity-title">
+        <span class="question-number">6.</span> 课外科研（包括独立研究）：
+      </view>
+      <view class="options-container">
+        <block wx:for="{{researchTypeOptions}}" wx:key="index">
+          <view class="option-item {{researchType.includes(item) ? 'checked' : ''}}" bindtap="onResearchTypeToggle" data-type="{{item}}">
+            <view class="option-name">{{item}}</view>
+            <view class="check-icon">{{researchType.includes(item) ? '✓' : ''}}</view>
+          </view>
+        </block>
+      </view>
+      <!-- 为每个选中的类型显示时长输入 -->
+      <view wx:if="{{researchType.length > 0}}" class="durations-container">
+        <block wx:for="{{researchType}}" wx:key="index">
+          <view class="input-group">
+            <view class="input-label">{{item}} 时长（月）：</view>
+            <input type="digit" placeholder="请输入" value="{{researchExperiences[item]}}" bindinput="onInputResearchExperience" data-type="{{item}}" class="input short"/>
+          </view>
+        </block>
+      </view>
+    </view>
+    
+    <!-- 志愿者活动 -->
+    <view class="activity-section">
+      <view class="activity-title">
+        <span class="question-number">7.</span> 志愿者活动（包括独立、非机构、学校组织活动）：
+      </view>
+      <view class="options-container">
+        <block wx:for="{{volunteerTypeOptions}}" wx:key="index">
+          <view class="option-item {{volunteerType.includes(item) ? 'checked' : ''}}" bindtap="onVolunteerTypeToggle" data-type="{{item}}">
+            <view class="option-name">{{item}}</view>
+            <view class="check-icon">{{volunteerType.includes(item) ? '✓' : ''}}</view>
+          </view>
+        </block>
+      </view>
+      <!-- 为每个选中的类型显示时长输入 -->
+      <view wx:if="{{volunteerType.length > 0}}" class="durations-container">
+        <block wx:for="{{volunteerType}}" wx:key="index">
+          <view class="input-group">
+            <view class="input-label">{{item}} 时长（月）：</view>
+            <input type="digit" placeholder="请输入" value="{{volunteerExperiences[item]}}" bindinput="onInputVolunteerExperience" data-type="{{item}}" class="input short"/>
+          </view>
+        </block>
+      </view>
+    </view>
+    
+    <!-- 兼职、实习经历 -->
+    <view class="activity-section">
+      <view class="activity-title">
+        <span class="question-number">8.</span> 兼职、实习经历（包括自己运营公众号等）：
+      </view>
+      <view class="options-container">
+        <block wx:for="{{internshipTypeOptions}}" wx:key="index">
+          <view class="option-item {{internshipType.includes(item) ? 'checked' : ''}}" bindtap="onInternshipTypeToggle" data-type="{{item}}">
+            <view class="option-name">{{item}}</view>
+            <view class="check-icon">{{internshipType.includes(item) ? '✓' : ''}}</view>
+          </view>
+        </block>
+      </view>
+      <!-- 为每个选中的类型显示时长输入 -->
+      <view wx:if="{{internshipType.length > 0}}" class="durations-container">
+        <block wx:for="{{internshipType}}" wx:key="index">
+          <view class="input-group">
+            <view class="input-label">{{item}} 时长（月）：</view>
+            <input type="digit" placeholder="请输入" value="{{internshipExperiences[item]}}" bindinput="onInputInternshipExperience" data-type="{{item}}" class="input short"/>
+          </view>
+        </block>
+      </view>
+    </view>
+    
+    <!-- 艺术实践 -->
+    <view class="activity-section">
+      <view class="activity-title">
+        <span class="question-number">9.</span> 艺术实践、练习：
+      </view>
+      <view class="options-container">
+        <block wx:for="{{artPracticeTypeOptions}}" wx:key="index">
+          <view class="option-item {{artPracticeType.includes(item) ? 'checked' : ''}}" bindtap="onArtPracticeTypeToggle" data-type="{{item}}">
+            <view class="option-name">{{item}}</view>
+            <view class="check-icon">{{artPracticeType.includes(item) ? '✓' : ''}}</view>
+          </view>
+        </block>
+      </view>
+      <!-- 为每个选中的类型显示时长输入 -->
+      <view wx:if="{{artPracticeType.length > 0}}" class="durations-container">
+        <block wx:for="{{artPracticeType}}" wx:key="index">
+          <view class="input-group">
+            <view class="input-label">{{item}} 时长（月）：</view>
+            <input type="digit" placeholder="请输入" value="{{artPractices[item]}}" bindinput="onInputArtPractice" data-type="{{item}}" class="input short"/>
+          </view>
+        </block>
+      </view>
+    </view>
+    
+    <!-- 全职工作 -->
+    <view class="activity-section">
+      <view class="activity-title">
+        <span class="question-number">10.</span> 全职工作：
+      </view>
+      <view class="options-container">
+        <block wx:for="{{fullTimeWorkTypeOptions}}" wx:key="index">
+          <view class="option-item {{fullTimeWorkType.includes(item) ? 'checked' : ''}}" bindtap="onFullTimeWorkTypeToggle" data-type="{{item}}">
+            <view class="option-name">{{item}}</view>
+            <view class="check-icon">{{fullTimeWorkType.includes(item) ? '✓' : ''}}</view>
+          </view>
+        </block>
+      </view>
+      <!-- 为每个选中的类型显示时长输入 -->
+      <view wx:if="{{fullTimeWorkType.length > 0}}" class="durations-container">
+        <block wx:for="{{fullTimeWorkType}}" wx:key="index">
+          <view class="input-group">
+            <view class="input-label">{{item}} 时长（月）：</view>
+            <input type="digit" placeholder="请输入" value="{{fullTimeWorks[item]}}" bindinput="onInputFullTimeWork" data-type="{{item}}" class="input short"/>
+          </view>
+        </block>
+      </view>
+    </view>
+    
+    <!-- 校级及以上荣誉 -->
+    <view class="activity-section">
+      <view class="input-group">
+        <view class="input-label">
+          <span class="question-number">11.</span> 校级及以上荣誉：
+        </view>
+        <input placeholder="请输入荣誉情况，如：数学竞赛一等奖" value="{{honors}}" bindinput="onInputHonors" class="input full"/>
+      </view>
+    </view>
+  </view>
+
+  <!-- 底部按钮 -->
+  <view class="bottom-buttons">
+    <button class="back-btn" bindtap="goBack">上一步</button>
+    <button class="next-btn" bindtap="goToNext">下一步</button>
+  </view>
+</view>
+</view>

@@ -11,12 +11,12 @@ Page({
     // 页面显示时的逻辑
   },
  
-  // 跳转到主页面
+  // 跳转到介绍页面
   goToIndex() {
     wx.navigateTo({
-      url: '/pages/index/index',
+      url: '/pages/intro/intro',
       success: () => {
-        console.log('成功跳转到智能选校主页面');
+        console.log('成功跳转到介绍页面');
       },
       fail: (err) => {
         console.error('跳转失败:', err);

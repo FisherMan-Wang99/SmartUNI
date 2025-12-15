@@ -1,5 +1,19 @@
 /* app.wxss */
 /* 全局样式 - 亮蓝色科技感主题 */
+
+/* 定义页面浮现动画 */
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(30rpx);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 页面基础样式与动画 */
 page {
   --primary-color: #2196F3; /* 主蓝色 */
   --secondary-color: #03A9F4; /* 亮蓝色 */
@@ -11,5 +25,23 @@ page {
   
   background: var(--background-color);
   font-family: sans-serif;
+  
+  /* 应用浮现动画到所有页面 */
+  animation: fadeInUp 0.6s ease-out forwards;
+}
+
+/* 页面内容容器也应用动画效果，稍微延迟一点 */
+.page-content, .content-wrapper, .container {
+  animation: fadeInUp 0.8s ease-out 0.1s both;
+}
+
+/* 为卡片和重要元素添加交错动画效果 */
+.card, .school-card, .advantage-item {
+  animation: fadeInUp 0.8s ease-out 0.2s both;
+}
+ 
+/* 按钮和交互元素添加稍晚的动画 */
+button, .btn {
+  animation: fadeInUp 0.9s ease-out 0.3s both;
 }
 

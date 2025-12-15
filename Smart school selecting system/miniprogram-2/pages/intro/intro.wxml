@@ -1,0 +1,112 @@
+<view class="page">
+  <!-- 顶部渐变标题栏 -->
+  <view class="header">
+    <!-- 返回按钮 -->
+    <view class="back-btn" bindtap="goBack">
+      <text class="back-icon">←</text>
+    </view>
+    
+    <!-- 标题内容 -->
+    <view class="header-content">
+      <view class="header-title">为什么选择云道智能选校？</view>
+      <view class="header-subtitle">AI 驱动，为您提供最精准的留学建议</view>
+    </view>
+  </view>
+
+  <!-- 主要内容 -->
+  <view class="container">
+    <!-- 页面内容区域 -->
+
+    <!-- 优势介绍区域 -->
+    <view class="advantages-section">
+      <!-- 优势项 1 -->
+      <view class="advantage-item">
+        <view class="advantage-icon">📊</view>
+        <view class="advantage-content">
+          <view class="advantage-title">大数据分析</view>
+          <view class="advantage-description">基于海量历史录取数据，综合分析学校录取偏好和趋势，提供更准确的匹配结果。</view>
+        </view>
+      </view>
+
+      <!-- 优势项 2 -->
+      <view class="advantage-item">
+        <view class="advantage-icon">🤖</view>
+        <view class="advantage-content">
+          <view class="advantage-title">AI 智能匹配</view>
+          <view class="advantage-description">先进的人工智能算法，考虑多维度因素，为您推荐最适合个人背景和发展方向的学校。</view>
+        </view>
+      </view>
+
+      <!-- 优势项 3 -->
+      <view class="advantage-item">
+        <view class="advantage-icon">⚡</view>
+        <view class="advantage-content">
+          <view class="advantage-title">高效便捷</view>
+          <view class="advantage-description">无需繁琐的手动搜索和比较，几分钟内完成个人信息填写，即可获得专业的选校建议。</view>
+        </view>
+      </view>
+
+      <!-- 优势项 4 -->
+      <view class="advantage-item">
+        <view class="advantage-icon">🎯</view>
+        <view class="advantage-content">
+          <view class="advantage-title">个性化定制</view>
+          <view class="advantage-description">充分考虑您的学术背景、兴趣爱好、职业规划和个人偏好，提供真正个性化的选校方案。</view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 流程介绍区域 -->
+    <view class="process-section">
+      <view class="section-title">
+        <text class="process-icon">🔄</text>
+        <text>选校流程</text>
+      </view>
+      <view class="process-steps">
+        <!-- 步骤 1 -->
+        <view class="process-step">
+          <view class="step-number">1</view>
+          <view class="step-content">
+            <view class="step-title">填写标化成绩</view>
+            <view class="step-description">输入您的GPA、托福/雅思、SAT/ACT等标化考试成绩</view>
+          </view>
+        </view>
+
+        <!-- 步骤 2 -->
+        <view class="process-step">
+          <view class="step-number">2</view>
+          <view class="step-content">
+            <view class="step-title">完善个人背景</view>
+            <view class="step-description">描述您的学术背景、课外活动、实习经历等综合信息</view>
+          </view>
+        </view>
+
+        <!-- 步骤 3 -->
+        <view class="process-step">
+          <view class="step-number">3</view>
+          <view class="step-content">
+            <view class="step-title">选择个人偏好</view>
+            <view class="step-description">设定您的专业意向、地理位置、学校规模等偏好条件</view>
+          </view>
+        </view>
+
+        <!-- 步骤 4 -->
+        <view class="process-step">
+          <view class="step-number">4</view>
+          <view class="step-content">
+            <view class="step-title">获取AI分析</view>
+            <view class="step-description">接收AI系统生成的选校报告，包含冲刺、匹配和保底学校推荐</view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 开始按钮 -->
+    <view class="start-section">
+      <button class="start-btn {{animatingBtn ? 'animate-ripple' : ''}}" bindtap="goToIndex">
+        <view class="btn-text">开始填写信息</view>
+        <view class="ripple" wx:if="{{animatingBtn}}"></view>
+      </button>
+    </view>
+  </view>
+</view>

@@ -1,13 +1,18 @@
 {
   "pages": [
     "pages/cover/cover",
+    "pages/intro/intro",
+    "pages/standard-score/standard-score",
+    "pages/activities/activities",
+    "pages/school-preference/school-preference",
+    "pages/loading/loading",
     "pages/index/index",
     "pages/detail/detail",
     "pages/history/history"
   ],
   "window": {
     "navigationBarTitleText": "大学推荐系统",
-    "navigationBarBackgroundColor": "#007ACC",
+    "navigationBarBackgroundColor": "#1976D2",
     "navigationBarTextStyle": "white"
   }
 }

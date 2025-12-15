@@ -1,0 +1,56 @@
+<view class="page">
+
+<!-- 顶部渐变标题栏 -->
+<view class="header">
+  <view class="header-title">智能选校助手</view>
+  <view class="header-subtitle">AI 驱动的个性化推荐</view>
+</view>
+  
+<view class="container">
+  <!-- 进度指示器 -->
+  <view class="progress-indicator">
+    <view class="progress-bar">
+      <view class="progress-fill" style="width: 33%;"></view>
+    </view>
+    <view class="progress-steps">
+      <view class="step active">标化成绩</view>
+      <view class="step">活动信息</view>
+      <view class="step">学校偏好</view>
+    </view>
+  </view>
+
+  <!-- 学术成绩卡片 -->
+  <view class="card">
+    <view class="card-title">标化成绩</view>
+    <view class="question-item">
+      <view class="question-number">1.</view>
+      <input placeholder="4分制，百分制皆可" value="{{gpa}}" bindinput="onInputGPA" class="input question-input"/>
+    </view>
+    <view class="question-item">
+      <view class="question-number">2.</view>
+      <picker mode="selector" range="{{testTypeOptions}}" bindchange="onTestTypeChange">
+        <view class="picker question-picker">{{testType || "请选择考试类型"}}</view>
+      </picker>
+    </view>
+    <view class="question-item">
+      <view class="question-number">3.</view>
+      <input placeholder="请输入考试成绩" value="{{testScore}}" bindinput="onInputTestScore" class="input question-input"/>
+    </view>
+    <view class="question-item">
+      <view class="question-number">4.</view>
+      <picker mode="selector" range="{{englishTestOptions}}" bindchange="onEnglishTestTypeChange">
+        <view class="picker question-picker">{{englishTestType || "请选择英语考试类型"}}</view>
+      </picker>
+    </view>
+    <view class="question-item">
+      <view class="question-number">5.</view>
+      <input placeholder="请输入英语成绩" value="{{englishScore}}" bindinput="onInputEnglishScore" class="input question-input"/>
+    </view>
+  </view>
+
+  <!-- 底部按钮 -->
+  <view class="bottom-buttons">
+    <button class="next-btn" bindtap="goToNext">下一步</button>
+  </view>
+</view>
+</view>

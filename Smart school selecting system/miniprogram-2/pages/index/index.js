@@ -1,5 +1,28 @@
 // pages/index/index.js
 Page({
+  onLoad: function(options) {
+    // 页面加载时的初始化逻辑
+    // 初始化所有职业兴趣选项为已选中状态，并设置默认排序
+    const allCareerInterests = this.data.careerInterestOptions.map((item, index) => ({
+      id: item.id,
+      name: item.name,
+      rank: index + 1
+    }));
+    
+    // 创建id到排序号的映射
+    const idToRankMap = {};
+    allCareerInterests.forEach(item => {
+      idToRankMap[item.id] = item.rank;
+    });
+    
+    this.setData({
+      selectedCareerInterests: allCareerInterests,
+      sortedCareerInterests: allCareerInterests,
+      idToRankMap: idToRankMap,
+      careerInterestOptions: this.data.careerInterestOptions.map(item => ({...item, checked: true}))
+    });
+  },
+
   // 页面数据 - 用于视图绑定
   data: {
     gpa: "",
@@ -18,22 +41,29 @@ Page({
     fullTimeWork: "", // 全职工作时长（月）
     honors: "", // 校级及以上荣誉
     
-    // 活动类型选择
-    researchType: "", // 课外科研类型
-    volunteerType: "", // 志愿者活动类型
-    internshipType: "", // 兼职、实习类型
-    artPracticeType: "", // 艺术实践类型
-    fullTimeWorkType: "", // 全职工作类型
+    // 活动类型选择 - 改为数组以支持多选
+    researchType: [], // 课外科研类型（多选）
+    volunteerType: [], // 志愿者活动类型（多选）
+    internshipType: [], // 兼职、实习类型（多选）
+    artPracticeType: [], // 艺术实践类型（多选）
+    fullTimeWorkType: [], // 全职工作类型（多选）
+    
+    // 活动类型对应的时长 - 使用对象存储每个类型的时长
+    researchExperiences: {}, // 课外科研时长 {type: months}
+    volunteerExperiences: {}, // 志愿者活动时长 {type: months}
+    internshipExperiences: {}, // 兼职、实习时长 {type: months}
+    artPractices: {}, // 艺术实践时长 {type: months}
+    fullTimeWorks: {}, // 全职工作时长 {type: months}
     
     // 学校偏好
     careerInterest: [], // 职业兴趣改为数组，存储排序后的结果
-    location: "", // 位置
-    schoolSize: "", // 规模
+    location: 2, // 位置（0-4，默认2-无所谓）
+    schoolSize: 2, // 规模（0-4，默认2-正常）
     tuition: 150000, // 学费（默认值）
     major: "", // 专业
-    teacherStudentRatio: "", // 师生关系
-    schoolAtmosphere: "", // 学校氛围
-    internationalLevel: "", // 国际化程度
+    teacherStudentRatio: 2, // 师生关系（0-1，默认0-更关心）
+    schoolAtmosphere: 1, // 学校氛围（0-2，默认1-Neutral）
+    internationalLevel: 2, // 国际化程度（0-1，默认0-高）
     
     loading: false,
     noData: false,
@@ -55,11 +85,11 @@ Page({
     dragY: 0, // 拖拽元素的Y轴偏移量
     
     // 其他下拉选项
-    locationOptions: ["大城市", "城市", "无所谓", "边郊", "乡村/大学城"],
-    schoolSizeOptions: ["巨大（50，000+）", "大（20，000+）", "正常（10，000+）", "偏小（5，000+）", "小（<5，000）"],
-    teacherStudentRatioOptions: ["更关心（师生比高）", "更摸鱼/自主（师生比低）"],
+    locationOptions: ["大城市", "普通城市", "无所谓", "边郊", "乡村"],
+    schoolSizeOptions: ["小（<5000）", "偏小（5000+）", "正常（10000+）", "偏大（20000+）", "大（50000+）"],
+    teacherStudentRatioOptions: ["极度关心", "比较关心", "一般", "比较自主", "极度自主"],
     schoolAtmosphereOptions: ["Party School", "Neutral", "Nerdy School"],
-    internationalLevelOptions: ["高", "低"],
+    internationalLevelOptions: ["非常高", "比较高", "一般", "比较低", "非常低"],
     majorOptions: ["计算机科学", "工程学", "商业/金融", "艺术/电影", "生物学", "心理学"],
     englishTestOptions: ["托福(TOEFL)", "雅思(IELTS)", "多邻国(DET)"], // 添加英语考试选项
     testTypeOptions: ["SAT", "ACT"], // 添加考试类型选项（SAT或ACT）
@@ -77,17 +107,42 @@ Page({
   onInputTestScore(e) { this.setData({ testScore: e.detail.value }); }, // 通用考试成绩输入处理
   onInputEnglishScore(e) { this.setData({ englishScore: e.detail.value }); }, // 英语成绩输入处理
   
-  // 活动经历输入事件
-  onInputResearchExperience(e) { this.setData({ researchExperience: e.detail.value }); },
-  onInputVolunteerExperience(e) { this.setData({ volunteerExperience: e.detail.value }); },
-  onInputInternshipExperience(e) { this.setData({ internshipExperience: e.detail.value }); },
-  onInputArtPractice(e) { this.setData({ artPractice: e.detail.value }); },
-  onInputFullTimeWork(e) { this.setData({ fullTimeWork: e.detail.value }); },
+  // 活动经历输入事件 - 修改为处理具体类型的时长
+  onInputResearchExperience(e) { 
+    const type = e.currentTarget.dataset.type;
+    const experiences = {...this.data.researchExperiences};
+    experiences[type] = e.detail.value;
+    this.setData({ researchExperiences: experiences }); 
+  },
+  onInputVolunteerExperience(e) { 
+    const type = e.currentTarget.dataset.type;
+    const experiences = {...this.data.volunteerExperiences};
+    experiences[type] = e.detail.value;
+    this.setData({ volunteerExperiences: experiences }); 
+  },
+  onInputInternshipExperience(e) { 
+    const type = e.currentTarget.dataset.type;
+    const experiences = {...this.data.internshipExperiences};
+    experiences[type] = e.detail.value;
+    this.setData({ internshipExperiences: experiences }); 
+  },
+  onInputArtPractice(e) { 
+    const type = e.currentTarget.dataset.type;
+    const experiences = {...this.data.artPractices};
+    experiences[type] = e.detail.value;
+    this.setData({ artPractices: experiences }); 
+  },
+  onInputFullTimeWork(e) { 
+    const type = e.currentTarget.dataset.type;
+    const experiences = {...this.data.fullTimeWorks};
+    experiences[type] = e.detail.value;
+    this.setData({ fullTimeWorks: experiences }); 
+  },
   onInputHonors(e) { this.setData({ honors: e.detail.value }); },
   
   // 学费滑块变化
   onTuitionChange(e) { this.setData({ tuition: e.detail.value }); },
-
+ 
   // Picker选择事件
   onTestTypeChange(e) { 
     this.setData({ 
@@ -100,63 +155,10 @@ Page({
     }); 
   },
   
-  // 职业兴趣选择与排序相关方法
+  // 职业兴趣排序相关方法 - 移除选择功能，所有选项默认可排序
   onCareerInterestToggle(e) { 
-    const id = e.currentTarget.dataset.id;
-    const index = this.data.careerInterestOptions.findIndex(item => item.id === id);
-    
-    if (index !== -1) {
-      // 创建新数组以避免直接修改原数组
-      const updatedOptions = [...this.data.careerInterestOptions];
-      const newCheckedState = !updatedOptions[index].checked;
-      
-      // 如果是选中，检查是否超过5个
-      if (newCheckedState) {
-        const checkedCount = updatedOptions.filter(item => item.checked).length;
-        if (checkedCount >= 5) {
-          wx.showToast({ 
-            title: '最多只能选择5个职业兴趣', 
-            icon: 'none',
-            duration: 2000
-          });
-          return;
-        }
-      }
-      
-      updatedOptions[index].checked = newCheckedState;
-      
-      let selectedCareerInterests = [];
-      
-      if (newCheckedState) {
-        // 如果是选中操作，将新选项添加到选中列表的前面（先点击的排在前面）
-        selectedCareerInterests = [
-          { id: id, name: updatedOptions[index].name, rank: 1 },
-          ...this.data.selectedCareerInterests.map(item => ({ ...item, rank: item.rank + 1 }))
-        ];
-      } else {
-        // 如果是取消选中操作，从选中列表中移除该项，并重新计算其他项的排序号
-        const removedItemRank = this.data.selectedCareerInterests.find(item => item.id === id)?.rank;
-        selectedCareerInterests = this.data.selectedCareerInterests
-          .filter(item => item.id !== id)
-          .map(item => ({
-            ...item, 
-            rank: item.rank > removedItemRank ? item.rank - 1 : item.rank
-          }));
-      }
-      
-      // 创建id到排序号的映射
-      const idToRankMap = {};
-      selectedCareerInterests.forEach(item => {
-        idToRankMap[item.id] = item.rank;
-      });
-      
-      this.setData({
-        careerInterestOptions: updatedOptions,
-        selectedCareerInterests: selectedCareerInterests,
-        sortedCareerInterests: selectedCareerInterests,
-        idToRankMap: idToRankMap
-      });
-    }
+    // 保留该方法以避免绑定错误，但不执行任何操作
+    // 所有选项默认都在排序列表中
   },
   
   // 开始拖动
@@ -201,7 +203,7 @@ Page({
       this.setData({ dragY: 0 });
     }
   },
-  
+   
   // 拖动结束
   onDragEnd(e) {
     // 先设置偏移量为0，触发归位动画
@@ -247,29 +249,30 @@ Page({
     // 提供视觉反馈
     wx.vibrateShort();
   },
+  // 滑动条处理函数
   onLocationChange(e) { 
     this.setData({ 
-      location: this.data.locationOptions[e.detail.value] 
+      location: e.detail.value 
     }); 
   },    
   onSchoolSizeChange(e) { 
     this.setData({ 
-      schoolSize: this.data.schoolSizeOptions[e.detail.value] 
+      schoolSize: e.detail.value 
     }); 
   },
   onTeacherStudentRatioChange(e) { 
     this.setData({ 
-      teacherStudentRatio: this.data.teacherStudentRatioOptions[e.detail.value] 
+      teacherStudentRatio: e.detail.value 
     }); 
   },
   onSchoolAtmosphereChange(e) { 
     this.setData({ 
-      schoolAtmosphere: this.data.schoolAtmosphereOptions[e.detail.value] 
+      schoolAtmosphere: e.detail.value 
     }); 
   },
   onInternationalLevelChange(e) { 
     this.setData({ 
-      internationalLevel: this.data.internationalLevelOptions[e.detail.value] 
+      internationalLevel: e.detail.value 
     }); 
   },
   onMajorChange(e) { 
@@ -277,46 +280,168 @@ Page({
       major: this.data.majorOptions[e.detail.value] 
     }); 
   },
-  // 活动类型选择事件
-  onResearchTypeChange(e) { 
-    this.setData({ 
-      researchType: this.data.researchTypeOptions[e.detail.value] 
-    }); 
+  // 活动类型选择事件 - 修改为支持多选
+  onResearchTypeToggle(e) { 
+    const type = e.currentTarget.dataset.type;
+    const currentTypes = [...this.data.researchType];
+    const index = currentTypes.indexOf(type);
+    
+    if (index === -1) {
+      // 添加类型
+      currentTypes.push(type);
+      // 初始化对应时长为""
+      const experiences = {...this.data.researchExperiences};
+      experiences[type] = "";
+      this.setData({ 
+        researchType: currentTypes,
+        researchExperiences: experiences
+      });
+    } else {
+      // 移除类型
+      currentTypes.splice(index, 1);
+      // 删除对应时长
+      const experiences = {...this.data.researchExperiences};
+      delete experiences[type];
+      this.setData({ 
+        researchType: currentTypes,
+        researchExperiences: experiences
+      });
+    }
   },
-  onVolunteerTypeChange(e) { 
-    this.setData({ 
-      volunteerType: this.data.volunteerTypeOptions[e.detail.value] 
-    }); 
+  onVolunteerTypeToggle(e) { 
+    const type = e.currentTarget.dataset.type;
+    const currentTypes = [...this.data.volunteerType];
+    const index = currentTypes.indexOf(type);
+    
+    if (index === -1) {
+      // 添加类型
+      currentTypes.push(type);
+      // 初始化对应时长为""
+      const experiences = {...this.data.volunteerExperiences};
+      experiences[type] = "";
+      this.setData({ 
+        volunteerType: currentTypes,
+        volunteerExperiences: experiences
+      });
+    } else {
+      // 移除类型
+      currentTypes.splice(index, 1);
+      // 删除对应时长
+      const experiences = {...this.data.volunteerExperiences};
+      delete experiences[type];
+      this.setData({ 
+        volunteerType: currentTypes,
+        volunteerExperiences: experiences
+      });
+    }
   },
-  onInternshipTypeChange(e) { 
-    this.setData({ 
-      internshipType: this.data.internshipTypeOptions[e.detail.value] 
-    }); 
+  onInternshipTypeToggle(e) { 
+    const type = e.currentTarget.dataset.type;
+    const currentTypes = [...this.data.internshipType];
+    const index = currentTypes.indexOf(type);
+    
+    if (index === -1) {
+      // 添加类型
+      currentTypes.push(type);
+      // 初始化对应时长为""
+      const experiences = {...this.data.internshipExperiences};
+      experiences[type] = "";
+      this.setData({ 
+        internshipType: currentTypes,
+        internshipExperiences: experiences
+      });
+    } else {
+      // 移除类型
+      currentTypes.splice(index, 1);
+      // 删除对应时长
+      const experiences = {...this.data.internshipExperiences};
+      delete experiences[type];
+      this.setData({ 
+        internshipType: currentTypes,
+        internshipExperiences: experiences
+      });
+    }
   },
-  onArtPracticeTypeChange(e) { 
-    this.setData({ 
-      artPracticeType: this.data.artPracticeTypeOptions[e.detail.value] 
-    }); 
+  onArtPracticeTypeToggle(e) { 
+    const type = e.currentTarget.dataset.type;
+    const currentTypes = [...this.data.artPracticeType];
+    const index = currentTypes.indexOf(type);
+    
+    if (index === -1) {
+      // 添加类型
+      currentTypes.push(type);
+      // 初始化对应时长为""
+      const experiences = {...this.data.artPractices};
+      experiences[type] = "";
+      this.setData({ 
+        artPracticeType: currentTypes,
+        artPractices: experiences
+      });
+    } else {
+      // 移除类型
+      currentTypes.splice(index, 1);
+      // 删除对应时长
+      const experiences = {...this.data.artPractices};
+      delete experiences[type];
+      this.setData({ 
+        artPracticeType: currentTypes,
+        artPractices: experiences
+      });
+    }
   },
-  onFullTimeWorkTypeChange(e) { 
-    this.setData({ 
-      fullTimeWorkType: this.data.fullTimeWorkTypeOptions[e.detail.value] 
-    }); 
+  onFullTimeWorkTypeToggle(e) { 
+    const type = e.currentTarget.dataset.type;
+    const currentTypes = [...this.data.fullTimeWorkType];
+    const index = currentTypes.indexOf(type);
+    
+    if (index === -1) {
+      // 添加类型
+      currentTypes.push(type);
+      // 初始化对应时长为""
+      const experiences = {...this.data.fullTimeWorks};
+      experiences[type] = "";
+      this.setData({ 
+        fullTimeWorkType: currentTypes,
+        fullTimeWorks: experiences
+      });
+    } else {
+      // 移除类型
+      currentTypes.splice(index, 1);
+      // 删除对应时长
+      const experiences = {...this.data.fullTimeWorks};
+      delete experiences[type];
+      this.setData({ 
+        fullTimeWorkType: currentTypes,
+        fullTimeWorks: experiences
+      });
+    }
   },
   // 提交
   onSubmit() {
     const { gpa, testType, testScore, englishTestType, englishScore, 
-            researchExperience, volunteerExperience, internshipExperience, 
-            artPractice, fullTimeWork, honors, 
+            honors, 
             location, schoolSize, tuition, major, 
             teacherStudentRatio, schoolAtmosphere, internationalLevel, 
-            researchType, volunteerType, internshipType, artPracticeType, fullTimeWorkType } = this.data;
+            researchType, volunteerType, internshipType, artPracticeType, fullTimeWorkType,
+            researchExperiences, volunteerExperiences, internshipExperiences,
+            artPractices, fullTimeWorks } = this.data;
     
-    // 处理职业兴趣数据 - 将排序结果转换为后端需要的格式
-    // 如果用户已经进行了排序，使用排序结果；否则使用选中结果
-    const careerInterest = this.data.sortedCareerInterests.length > 0 
-      ? this.data.sortedCareerInterests.map(item => item.name).join(';') 
-      : this.data.selectedCareerInterests.map(item => item.name).join(';');
+    // 处理职业兴趣数据 - 使用所有选项的完整列表
+    const careerInterest = this.data.careerInterestOptions.map(item => item.name).join(';');
+      
+    // 计算各活动类型的总时长
+    const calculateTotalMonths = (experiences) => {
+      return Object.values(experiences).reduce((total, months) => {
+        return total + (parseInt(months) || 0);
+      }, 0);
+    };
+    
+    // 计算各类活动的总时长
+    const researchExperience = calculateTotalMonths(researchExperiences);
+    const volunteerExperience = calculateTotalMonths(volunteerExperiences);
+    const internshipExperience = calculateTotalMonths(internshipExperiences);
+    const artPractice = calculateTotalMonths(artPractices);
+    const fullTimeWork = calculateTotalMonths(fullTimeWorks);
 
     // 验证逻辑已暂时无效化，方便调试
     /*
@@ -343,25 +468,31 @@ Page({
     const requestData = {
       academics: {
         gpa,
-        sat: testType === 'SAT' ? testScore : null,
-        act: testType === 'ACT' ? testScore : null,
-        toefl: englishTestType.includes('托福') ? englishScore : null,
-        ielts: englishTestType.includes('雅思') ? englishScore : null,
-        det: englishTestType.includes('多邻国') ? englishScore : null
+        sat: testType.toLowerCase() === 'sat' ? testScore : null,
+        act: testType.toLowerCase() === 'act' ? testScore : null,
+        toefl: englishTestType.toLowerCase().includes('托福') || englishTestType.toLowerCase().includes('toefl') ? englishScore : null,
+        ielts: englishTestType.toLowerCase().includes('雅思') || englishTestType.toLowerCase().includes('ielts') ? englishScore : null,
+        det: englishTestType.toLowerCase().includes('多邻国') || englishTestType.toLowerCase().includes('det') ? englishScore : null
       },
       activities: {
+        // 总时长（转换为数字类型）
         research_months: parseInt(researchExperience) || 0,
-        research_type: researchType,
+        research_type: researchType.join(';') || '', // 多选类型用分号分隔
+        research_details: JSON.stringify(researchExperiences), // 保存详细的类型-时长对应关系
         volunteer_months: parseInt(volunteerExperience) || 0,
-        volunteer_type: volunteerType,
+        volunteer_type: volunteerType.join(';') || '',
+        volunteer_details: JSON.stringify(volunteerExperiences),
         internship_months: parseInt(internshipExperience) || 0,
-        internship_type: internshipType,
+        internship_type: internshipType.join(';') || '',
+        internship_details: JSON.stringify(internshipExperiences),
         art_months: parseInt(artPractice) || 0,
-        art_type: artPracticeType,
+        art_type: artPracticeType.join(';') || '',
+        art_details: JSON.stringify(artPractices),
         full_time_work_months: parseInt(fullTimeWork) || 0,
-        full_time_work_type: fullTimeWorkType,
-        honors: honors
-      },  
+        full_time_work_type: fullTimeWorkType.join(';') || '',
+        full_time_work_details: JSON.stringify(fullTimeWorks),
+        honors: honors || ''
+      },
       preferences: {
         career_interest: careerInterest,
         location: location,
@@ -413,8 +544,8 @@ Page({
           safetySchools
         };
  
-        // 跳转到详情页
-        wx.navigateTo({ url: '/pages/detail/detail' });
+        // 跳转到加载页面，而不是直接跳转到详情页
+        wx.navigateTo({ url: '/pages/loading/loading' });
       },
       fail: (err) => {
         console.error("请求失败:", err);
