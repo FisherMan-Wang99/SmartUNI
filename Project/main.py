@@ -1,99 +1,98 @@
 import streamlit as st
 from utils import init_db
 
-# 初始化数据库
+# Initialize database
 init_db()
 
-# 页面基础配置
+# Page configuration
 st.set_page_config(
-    page_title="美国大学适配测试",
+    page_title="US University Fit Test",
     page_icon="🎓",
     layout="wide",
     initial_sidebar_state="expanded"
 )
 
-# 读取 URL 查询参数
+# Read URL query parameters
 query_params = st.query_params
 if 'session_id' in query_params:
     st.session_state.session_id = query_params['session_id'][0]
 
-# 欢迎页面
-st.title("🎓 美国大学适配测试系统")
-st.markdown("## 你的个性化留学规划助手")
+# Welcome Page
+st.title("🎓 US University Fit Test System")
+st.markdown("## Your Personalized Study Abroad Planning Assistant")
 
-# 主要介绍区域
+# Main Introduction Section
 st.markdown("""
-### 🎯 系统简介
-欢迎使用美国大学适配测试系统！这是一个为中国学生量身打造的美国大学申请辅助工具，通过科学的算法和全面的数据，帮助你找到最适合的留学目的地。
+### 🎯 System Introduction
+Welcome to the US University Fit Test System! This is an application assistance tool specifically designed for students to find the most suitable study abroad destinations through scientific algorithms and comprehensive data.
 
-### ✨ 核心功能
+### ✨ Core Features
 
-**🔍 个性化适配分析**
-- 根据你的学术成绩、兴趣爱好和个人偏好提供精准的大学匹配
-- 考虑GPA、标准化考试成绩、兴趣领域等多维度因素
-- 生成匹配度可视化报告，直观展示你的竞争力
+**🔍 Personalized Fit Analysis**
+- Receive precise university matches based on your academic performance, interests, and personal preferences.
+- Factors like GPA, standardized test scores, and fields of interest are all considered.
+- Generates a fit visualization report to intuitively show your competitiveness.
 
-**📊 云道大学排名**
-- 提供不同于传统排名的多维度大学评估
-- 包含学术声誉、就业前景、国际化程度等关键指标
-- 支持自定义权重，根据你的关注点调整排名结果
+**📊 CloudPath University Rankings**
+- Provides multi-dimensional university evaluations that differ from traditional rankings.
+- Includes key indicators such as academic reputation, career prospects, and internationalization.
+- Supports custom weighting so you can adjust rankings based on what matters most to you.
 
-**📝 完整的评估流程**
-- 简短问卷快速获取你的基本信息和偏好
-- 智能算法生成个性化推荐结果
-- 提供详细的学校信息和申请建议
+**📝 Complete Evaluation Process**
+- A brief questionnaire to quickly capture your basic information and preferences.
+- Intelligent algorithms generate personalized recommendation results.
+- Provides detailed school information and application advice.
 
-### 💡 使用指南
+### 💡 User Guide
 
-1. **开始测试** - 填写简短问卷，输入你的学术信息和偏好
-2. **查看结果** - 获得个性化的大学推荐和匹配度分析
-3. **探索榜单** - 浏览云道大学排名，了解更多学校选择
-4. **保存结果** - 通过保存代码随时查看你的推荐结果
+1. **Start the Test** - Fill out a short survey with your academic info and preferences.
+2. **View Results** - Get personalized university recommendations and fit analysis.
+3. **Explore Rankings** - Browse CloudPath University Rankings to discover more school options.
+4. **Save Results** - Use a save code to view your recommendation results at any time.
 
-### 🔒 隐私保护
-我们重视你的隐私，所有个人信息仅用于生成推荐结果，不会共享给第三方。
+### 🔒 Privacy Protection
+We value your privacy. All personal information is used solely for generating recommendation results and will not be shared with third parties.
 """)
 
-# 功能亮点卡片
+# Feature Highlight Cards
 col1, col2, col3 = st.columns(3)
 
 with col1:
-    st.markdown("### 📈 数据驱动分析")
-    st.markdown("基于最新的美国大学数据和申请趋势，提供科学准确的推荐。")
+    st.markdown("### 📈 Data-Driven Analysis")
+    st.markdown("Based on the latest US university data and application trends to provide accurate recommendations.")
     
 with col2:
-    st.markdown("### 🎯 个性化匹配")
-    st.markdown("考虑你的独特背景和偏好，找到最适合你的大学选择。")
+    st.markdown("### 🎯 Personalized Matching")
+    st.markdown("Considers your unique background and preferences to find the best fit for your university choices.")
     
 with col3:
-    st.markdown("### 📚 全面资源")
-    st.markdown("提供大学详细信息和申请建议，助力你的留学规划。")
+    st.markdown("### 📚 Comprehensive Resources")
+    st.markdown("Provides detailed university information and application suggestions to assist your planning.")
 
-# 常见问题解答
-with st.expander("❓ 常见问题", expanded=False):
-    st.markdown("**Q: 测试结果的准确度如何？**")
-    st.markdown("A: 系统基于实际大学录取数据和多维度分析生成推荐，但最终申请结果还受多种因素影响。")
+# FAQ Section
+with st.expander("❓ Frequently Asked Questions", expanded=False):
+    st.markdown("**Q: How accurate are the test results?**")
+    st.markdown("A: The system generates recommendations based on actual university admission data and multi-dimensional analysis, but final results are influenced by many factors.")
     
-    st.markdown("**Q: 测试需要多长时间完成？**")
-    st.markdown("A: 完整问卷通常只需5-10分钟即可完成。")
+    st.markdown("**Q: How long does the test take to complete?**")
+    st.markdown("A: The complete questionnaire usually takes only 5-10 minutes.")
     
-    st.markdown("**Q: 如何保存我的测试结果？**")
-    st.markdown("A: 提交问卷后会生成唯一的保存代码，使用此代码可以随时查看你的结果。")
+    st.markdown("**Q: How do I save my test results?**")
+    st.markdown("A: A unique save code is generated after submitting the survey; use this code to access your results later.")
     
-    st.markdown("**Q: 推荐结果包括哪些学校信息？**")
-    st.markdown("A: 包括学校名称、匹配度评分、基本介绍以及申请建议等信息。")
+    st.markdown("**Q: What school information is included in the recommendations?**")
+    st.markdown("A: It includes school names, fit scores, basic introductions, and specific application advice.")
 
-# 移除隐藏样式，确保所有内容正常显示
-# 自定义CSS样式
+# Custom CSS Styles
 st.markdown("""
 <style>
-/* 移除所有隐藏样式 */
+/* Remove all hidden styles */
 </style>
 """, unsafe_allow_html=True)
 
 
-# 添加“开始测试”按钮
-if st.button("🚀 开始测试"):
+# Add "Start Test" Button
+if st.button("🚀 Start Test"):
     st.switch_page("pages/问卷.py")
 
 # 如果 URL 里带有保存代码，提供查看结果的快捷入口
