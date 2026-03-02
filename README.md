@@ -1,4 +1,4 @@
-# US University Database(Streamlit Project) 🎓
+# US University Database(Streamlit Project in the Streamlit branch) 🎓
 
 ![question-fill-gif](https://github.com/user-attachments/assets/ba29107d-aebd-42aa-8e3f-5b3679bcbdd9)
 
